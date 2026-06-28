@@ -214,7 +214,8 @@ const IS         = W - 2 * BM; // inner size
 const COIN_R     = 13;
 const STK_R      = 16;
 const PKT_R      = 24;          // pocket radius
-const FRICTION   = 0.988;
+const FRICTION   = 0.972;       // faster decel → ~2s stop time
+const STOP_VEL   = 0.18;        // velocity threshold to stop
 const RESTITUTION = 0.82;
 const MAX_PWR    = 22;
 
@@ -487,8 +488,8 @@ class Piece {
         if(!this.active||this.sucking) return;
         this.x+=this.vx; this.y+=this.vy;
         this.vx*=FRICTION; this.vy*=FRICTION;
-        if(Math.abs(this.vx)<0.04) this.vx=0;
-        if(Math.abs(this.vy)<0.04) this.vy=0;
+        if(Math.abs(this.vx)<STOP_VEL) this.vx=0;
+        if(Math.abs(this.vy)<STOP_VEL) this.vy=0;
         const L=BM+this.r, R=W-BM-this.r, T=BM+this.r, Bo=H-BM-this.r;
         if(this.x<L){ this.x=L; this.vx=Math.abs(this.vx)*RESTITUTION; playClack(Math.abs(this.vx)); }
         else if(this.x>R){ this.x=R; this.vx=-Math.abs(this.vx)*RESTITUTION; playClack(Math.abs(this.vx)); }
@@ -851,13 +852,16 @@ function loop(){
     ctx.clearRect(0,0,W,H);
     drawBoard();
 
-    let anyMoving=false;
+    // physicsMoving: actual piece movement (determines turn end)
+    // animMoving: suck-in animations (also waits before ending turn)
+    // particles: fireworks — visual only, do NOT block turn end
+    let physicsMoving=false, animMoving=false;
 
     // ── 1. Update positions ──
     for(const p of pieces){
         if(!p.active||p.sucking) continue;
         p.update();
-        if(p.vx!==0||p.vy!==0) anyMoving=true;
+        if(p.vx!==0||p.vy!==0) physicsMoving=true;
     }
 
     // ── 2. Resolve collisions (single clean pass) ──
@@ -876,21 +880,21 @@ function loop(){
             p.y+=(p.suckTarget.y-p.y)*0.22;
             p.r=Math.max(0,p.r-1.1);
             if(p.r>0.5) p.draw(); else p.active=false;
-            anyMoving=true; continue;
+            animMoving=true; continue;  // suck-in counts, particles don't
         }
         if(!p.active) continue;
         checkPocket(p);
         p.draw();
     }
 
-    // ── 4. Fireworks ──
+    // ── 4. Fireworks (visual only — does NOT block turn end) ──
     tickParticles();
-    if(particles.length>0) anyMoving=true;
 
     // ── 5. Aim ──
     drawAim();
 
-    // ── 6. Turn end ──
+    // ── 6. Turn end: only wait for physics + suck-in, NOT particles ──
+    const anyMoving = physicsMoving || animMoving;
     if(moving&&!anyMoving){ moving=false; endTurn(); }
 
     requestAnimationFrame(loop);
