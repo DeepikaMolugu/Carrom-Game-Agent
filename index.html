@@ -791,6 +791,7 @@ function endTurn(){
     if (player === 2) {
         episodesCount++;
         rlEpisodesEl.innerText = episodesCount.toLocaleString();
+        triggerAgentDecision();
     }
     
     turnEl.innerText= player===1 ? "⚡ Human's Turn" : "🤖 Agent.Q's Turn";
@@ -1009,6 +1010,13 @@ function loop(){
 
     // ── 5. Aim ──
     drawAim();
+
+    if (aiThinking && !physicsMoving && !animMoving) {
+        aiThinkingTimer--;
+        if (aiThinkingTimer <= 0) {
+            executeAgentShot();
+        }
+    }
 
     // ── 6. Turn end: only wait for physics + suck-in, NOT particles ──
     const anyMoving = physicsMoving || animMoving;
