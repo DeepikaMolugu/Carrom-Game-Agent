@@ -388,15 +388,14 @@ const logsEl     = document.getElementById('agentLogs');
 const powerBarEl = document.getElementById('powerBar');
 
 // ── Constants ──
-const FRICTION     = 0.990;  // smoother glide
+const FRICTION     = 0.989;
 const RESTITUTION  = 0.86;
 const BOARD_MARGIN = 38;
 const INNER_SIZE   = W - 2 * BOARD_MARGIN;
-const POCKET_R     = 27;     // larger — easier to pocket
+const POCKET_R     = 27;
 const MAX_POWER    = 24;
 const COIN_R       = 13;
 const STRIKER_R    = 17;
-const SUBSTEPS     = 3;      // sub-step collisions for smoothness
 
 const TYPE = { STRIKER:'striker', WHITE:'white', BLACK:'black', QUEEN:'queen' };
 
@@ -787,16 +786,7 @@ class Piece {
     update() {
         if (!this.active) return;
 
-        // Smooth suck-in animation when close to a pocket
-        if (this.sucking) {
-            this.x += (this.suckTarget.x - this.x) * 0.18;
-            this.y += (this.suckTarget.y - this.y) * 0.18;
-            this.radius = Math.max(0, this.radius - 0.8);
-            this.vx = 0; this.vy = 0;
-            if (this.radius <= 1) { this.active = false; }
-            return;
-        }
-
+        // Apply velocity and friction
         this.x += this.vx;
         this.y += this.vy;
         this.vx *= FRICTION;
@@ -807,10 +797,10 @@ class Piece {
         const L = BOARD_MARGIN + this.radius, R = W - BOARD_MARGIN - this.radius;
         const T = BOARD_MARGIN + this.radius, B = H - BOARD_MARGIN - this.radius;
 
-        if (this.x < L) { this.x = L; this.vx *= -RESTITUTION; playCollision(Math.abs(this.vx) * 3); }
-        else if (this.x > R) { this.x = R; this.vx *= -RESTITUTION; playCollision(Math.abs(this.vx) * 3); }
-        if (this.y < T) { this.y = T; this.vy *= -RESTITUTION; playCollision(Math.abs(this.vy) * 3); }
-        else if (this.y > B) { this.y = B; this.vy *= -RESTITUTION; playCollision(Math.abs(this.vy) * 3); }
+        if (this.x < L) { this.x = L; this.vx = Math.abs(this.vx) * RESTITUTION; playCollision(Math.abs(this.vx) * 2); }
+        else if (this.x > R) { this.x = R; this.vx = -Math.abs(this.vx) * RESTITUTION; playCollision(Math.abs(this.vx) * 2); }
+        if (this.y < T) { this.y = T; this.vy = Math.abs(this.vy) * RESTITUTION; playCollision(Math.abs(this.vy) * 2); }
+        else if (this.y > B) { this.y = B; this.vy = -Math.abs(this.vy) * RESTITUTION; playCollision(Math.abs(this.vy) * 2); }
     }
 }
 
@@ -936,44 +926,47 @@ canvas.addEventListener('touchend', e => {
 
 // ══ Physics ════════════════════════════════════════════════════
 function resolveCollision(p1, p2) {
-    if (p1.sucking || p2.sucking) return;
+    if (!p1.active || !p2.active || p1.sucking || p2.sucking) return;
     const dx = p2.x - p1.x, dy = p2.y - p1.y;
     const dist = Math.hypot(dx, dy);
     const minDist = p1.radius + p2.radius;
-    if (dist < minDist && dist > 0) {
-        const overlap = minDist - dist;
-        const nx = dx / dist, ny = dy / dist;
-        // Push apart — weighted by mass
-        const totalMass = p1.mass + p2.mass;
-        p1.x -= nx * overlap * (p2.mass / totalMass);
-        p1.y -= ny * overlap * (p2.mass / totalMass);
-        p2.x += nx * overlap * (p1.mass / totalMass);
-        p2.y += ny * overlap * (p1.mass / totalMass);
-        const kx = p1.vx - p2.vx, ky = p1.vy - p2.vy;
-        const dot = nx * kx + ny * ky;
-        if (dot > 0) return; // already separating
-        const j = -(1 + RESTITUTION) * dot / totalMass;
-        p1.vx += j * p2.mass * nx;
-        p1.vy += j * p2.mass * ny;
-        p2.vx -= j * p1.mass * nx;
-        p2.vy -= j * p1.mass * ny;
-        const intensity = Math.abs(j);
-        if (p1.type === TYPE.STRIKER || p2.type === TYPE.STRIKER) playStrikerHit(intensity);
-        else playCollision(intensity);
-    }
+    if (dist >= minDist || dist === 0) return;
+
+    // Separate overlapping pieces
+    const overlap = minDist - dist;
+    const nx = dx / dist, ny = dy / dist;
+    const totalMass = p1.mass + p2.mass;
+    p1.x -= nx * overlap * (p2.mass / totalMass);
+    p1.y -= ny * overlap * (p2.mass / totalMass);
+    p2.x += nx * overlap * (p1.mass / totalMass);
+    p2.y += ny * overlap * (p1.mass / totalMass);
+
+    // Impulse-based velocity exchange
+    const dvx = p1.vx - p2.vx, dvy = p1.vy - p2.vy;
+    const dot = dvx * nx + dvy * ny;
+    if (dot >= 0) return; // already moving apart
+
+    const impulse = (-(1 + RESTITUTION) * dot) / totalMass;
+    p1.vx += impulse * p2.mass * nx;
+    p1.vy += impulse * p2.mass * ny;
+    p2.vx -= impulse * p1.mass * nx;
+    p2.vy -= impulse * p1.mass * ny;
+
+    const intensity = Math.abs(impulse);
+    if (p1.type === TYPE.STRIKER || p2.type === TYPE.STRIKER) playStrikerHit(intensity);
+    else playCollision(intensity);
 }
 
 function checkPockets(piece) {
     if (!piece.active || piece.sucking) return false;
     for (let pk of pockets) {
         const dist = Math.hypot(piece.x - pk.x, piece.y - pk.y);
-        if (dist < POCKET_R + piece.radius * 0.5) {
-            // Begin suck-in animation
+        if (dist < POCKET_R) {
             piece.sucking = true;
             piece.suckTarget = { x: pk.x, y: pk.y };
+            piece.vx = 0; piece.vy = 0;
             handlePocketing(piece);
             playPocket();
-            // Spawn fireworks at pocket location
             const fwColor = piece.type === TYPE.QUEEN ? '#e74c3c'
                           : piece.type === TYPE.WHITE ? '#ecf0f1'
                           : piece.type === TYPE.STRIKER ? '#3498db'
@@ -1299,71 +1292,51 @@ function gameLoop() {
 
     let anyMoving = false;
 
-    // Sub-stepping: run physics N times per frame for smoother collisions
-    for (let step = 0; step < SUBSTEPS; step++) {
-        for (let i = 0; i < pieces.length; i++) {
-            const p1 = pieces[i];
-            if (!p1.active || p1.sucking) continue;
-            // Only move on first substep to avoid double movement
-            if (step === 0) {
-                p1.vx /= SUBSTEPS;
-                p1.vy /= SUBSTEPS;
-            }
-            p1.x += p1.vx;
-            p1.y += p1.vy;
-            // Wall bounds
-            const L = BOARD_MARGIN + p1.radius, R = W - BOARD_MARGIN - p1.radius;
-            const T = BOARD_MARGIN + p1.radius, B = H - BOARD_MARGIN - p1.radius;
-            if (p1.x < L) { p1.x = L; p1.vx *= -RESTITUTION; if(step===0) playCollision(Math.abs(p1.vx)*3*SUBSTEPS); }
-            else if (p1.x > R) { p1.x = R; p1.vx *= -RESTITUTION; if(step===0) playCollision(Math.abs(p1.vx)*3*SUBSTEPS); }
-            if (p1.y < T) { p1.y = T; p1.vy *= -RESTITUTION; if(step===0) playCollision(Math.abs(p1.vy)*3*SUBSTEPS); }
-            else if (p1.y > B) { p1.y = B; p1.vy *= -RESTITUTION; if(step===0) playCollision(Math.abs(p1.vy)*3*SUBSTEPS); }
+    // ── Physics pass (2 collision iterations for stability) ──
+    for (let i = 0; i < pieces.length; i++) {
+        const p = pieces[i];
+        if (!p.active || p.sucking) continue;
+        p.update();  // move + wall bounce
+        if (p.vx !== 0 || p.vy !== 0) anyMoving = true;
+    }
+    // First collision pass
+    for (let i = 0; i < pieces.length; i++) {
+        if (!pieces[i].active || pieces[i].sucking) continue;
+        for (let j = i + 1; j < pieces.length; j++) {
+            if (pieces[j].active && !pieces[j].sucking)
+                resolveCollision(pieces[i], pieces[j]);
         }
-        // Resolve collisions in this substep
-        for (let i = 0; i < pieces.length; i++) {
-            const p1 = pieces[i];
-            if (!p1.active || p1.sucking) continue;
-            for (let j = i + 1; j < pieces.length; j++) {
-                const p2 = pieces[j];
-                if (p2.active && !p2.sucking) resolveCollision(p1, p2);
-            }
-        }
-        // Restore velocity scale after last substep
-        if (step === SUBSTEPS - 1) {
-            for (const p of pieces) {
-                if (!p.active || p.sucking) continue;
-                // velocity was divided at start, now apply friction once
-                p.vx *= FRICTION;
-                p.vy *= FRICTION;
-                if (Math.abs(p.vx) < 0.04) p.vx = 0;
-                if (Math.abs(p.vy) < 0.04) p.vy = 0;
-            }
+    }
+    // Second collision pass (reduces tunneling at high speed)
+    for (let i = 0; i < pieces.length; i++) {
+        if (!pieces[i].active || pieces[i].sucking) continue;
+        for (let j = i + 1; j < pieces.length; j++) {
+            if (pieces[j].active && !pieces[j].sucking)
+                resolveCollision(pieces[i], pieces[j]);
         }
     }
 
-    // Draw pass + suck-in + pocket check
+    // ── Draw pass + pocket check + suck-in ──
     for (let i = 0; i < pieces.length; i++) {
-        const p1 = pieces[i];
+        const p = pieces[i];
 
-        // Handle suck-in animation
-        if (p1.sucking) {
-            p1.x += (p1.suckTarget.x - p1.x) * 0.2;
-            p1.y += (p1.suckTarget.y - p1.y) * 0.2;
-            p1.radius = Math.max(0, p1.radius - 0.9);
-            if (p1.radius > 0) p1.draw();
-            else p1.active = false;
+        if (p.sucking) {
+            // Smooth suck-in: slide to pocket center, shrink
+            p.x += (p.suckTarget.x - p.x) * 0.22;
+            p.y += (p.suckTarget.y - p.y) * 0.22;
+            p.radius = Math.max(0, p.radius - 1.0);
+            if (p.radius > 0.5) p.draw();
+            else p.active = false;
             anyMoving = true;
             continue;
         }
 
-        if (!p1.active) continue;
-        checkPockets(p1);
-
-        if (Math.abs(p1.vx) > 0 || Math.abs(p1.vy) > 0) anyMoving = true;
-        p1.draw();
+        if (!p.active) continue;
+        checkPockets(p);
+        p.draw();
     }
 
-    // Fireworks on top
+    // ── Fireworks on top ──
     updateAndDrawParticles();
     if (particles.length > 0) anyMoving = true;
 
