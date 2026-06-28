@@ -537,8 +537,8 @@ function initBoard(){
 }
 
 function resetStriker(){
-    if(striker){ const i=pieces.indexOf(striker); if(i>-1) pieces.splice(i,1); }
-    pieces=pieces.filter(p=>!(p.type===TYPE.S&&!p.active));
+    // Filter out all existing strikers regardless of active state
+    pieces = pieces.filter(p => p.type !== TYPE.S);
     const baseY=player===1?H-88:88;
     striker=new Piece(W/2,baseY,STK_R,TYPE.S,1.5);
     pieces.push(striker);
