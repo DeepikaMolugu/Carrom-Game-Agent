@@ -658,28 +658,38 @@ canvas.addEventListener('mousedown',e=>{
     go();
     const rect=canvas.getBoundingClientRect();
     const mx=e.clientX-rect.left, my=e.clientY-rect.top;
-    if(Math.hypot(mx-striker.x,my-striker.y)<striker.r+18){
-        aiming=true;
-        aimFrom={x:striker.x,y:striker.y};
-        aimTo={x:mx,y:my};
-        sldr.disabled=true; canvas.style.cursor='grabbing';
-    }
+    
+    // Allow aiming by dragging from anywhere, referencing from the striker's position
+    aiming=true;
+    aimFrom={x:striker.x,y:striker.y};
+    // Relative aim drag point
+    aimTo={x:striker.x + (mx - striker.x), y:striker.y + (my - striker.y)};
+    sldr.disabled=true; canvas.style.cursor='grabbing';
 });
 canvas.addEventListener('mousemove',e=>{
-    if(!aiming || player !== 1) return;
+    if(!aiming || player !== 1 || !striker) return;
     const rect=canvas.getBoundingClientRect();
-    aimTo={x:e.clientX-rect.left,y:e.clientY-rect.top};
-    const pwr=Math.min(Math.hypot(aimFrom.x-aimTo.x,aimFrom.y-aimTo.y)*0.15,MAX_PWR);
+    const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+    
+    // Drag opposite to direction of shot (slingshot behavior)
+    aimTo={x:mx, y:my};
+    const dx = striker.x - mx;
+    const dy = striker.y - my;
+    const pwr=Math.min(Math.hypot(dx,dy)*0.12,MAX_PWR);
     pwrBar.style.width=`${(pwr/MAX_PWR)*100}%`;
     if(pwr>1) playDrag(pwr);
 });
-canvas.addEventListener('mouseup',()=>{
-    if(!aiming || player !== 1) return;
+canvas.addEventListener('mouseup',e=>{
+    if(!aiming || player !== 1 || !striker) return;
     aiming=false; canvas.style.cursor='crosshair';
-    const dx=aimFrom.x-aimTo.x, dy=aimFrom.y-aimTo.y;
-    const pwr=Math.min(Math.hypot(dx,dy)*0.15,MAX_PWR);
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+    
+    const dx = striker.x - mx;
+    const dy = striker.y - my;
+    const pwr=Math.min(Math.hypot(dx,dy)*0.12,MAX_PWR);
     pwrBar.style.width='0%';
-    if(pwr>1.2){
+    if(pwr>1.5){
         const ang=Math.atan2(dy,dx);
         playSnap(pwr);
         striker.vx=Math.cos(ang)*pwr;
