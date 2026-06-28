@@ -9,7 +9,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background: #050a12;
+            background: #0a0f1e;
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
@@ -17,1355 +17,895 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            position: relative;
         }
 
-        /* ── Night cityscape background ── */
-        .bg-scene {
+        /* Night background */
+        .bg {
             position: fixed;
             inset: 0;
-            z-index: 0;
             background:
-                radial-gradient(ellipse 80% 60% at 50% 100%, rgba(20,10,50,0.95) 0%, transparent 70%),
-                radial-gradient(ellipse 120% 80% at 50% 110%, rgba(10,5,30,1) 0%, transparent 80%);
-            background-color: #060c1a;
+                radial-gradient(ellipse 70% 50% at 20% 80%, rgba(30,20,80,0.7) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 60% at 80% 70%, rgba(10,30,60,0.8) 0%, transparent 60%),
+                radial-gradient(ellipse 80% 40% at 50% 100%, rgba(5,10,25,1) 0%, transparent 70%);
+            background-color: #080d1a;
+            z-index: 0;
         }
-
-        /* City lights bokeh */
-        .bg-scene::before {
+        .bg::before {
             content: '';
             position: absolute;
             inset: 0;
             background-image:
-                radial-gradient(circle 3px at 10% 70%, rgba(255,180,50,0.8) 0%, transparent 100%),
-                radial-gradient(circle 2px at 15% 60%, rgba(100,180,255,0.7) 0%, transparent 100%),
-                radial-gradient(circle 4px at 20% 75%, rgba(255,150,50,0.6) 0%, transparent 100%),
-                radial-gradient(circle 2px at 25% 65%, rgba(255,220,100,0.8) 0%, transparent 100%),
-                radial-gradient(circle 3px at 30% 72%, rgba(200,100,255,0.5) 0%, transparent 100%),
-                radial-gradient(circle 2px at 35% 68%, rgba(100,200,255,0.7) 0%, transparent 100%),
-                radial-gradient(circle 5px at 40% 78%, rgba(255,180,50,0.6) 0%, transparent 100%),
-                radial-gradient(circle 2px at 45% 62%, rgba(255,100,100,0.5) 0%, transparent 100%),
-                radial-gradient(circle 3px at 55% 70%, rgba(255,220,100,0.7) 0%, transparent 100%),
-                radial-gradient(circle 2px at 60% 65%, rgba(100,200,255,0.6) 0%, transparent 100%),
-                radial-gradient(circle 4px at 65% 75%, rgba(255,150,50,0.7) 0%, transparent 100%),
-                radial-gradient(circle 2px at 70% 60%, rgba(200,100,255,0.5) 0%, transparent 100%),
-                radial-gradient(circle 3px at 75% 72%, rgba(255,180,50,0.8) 0%, transparent 100%),
-                radial-gradient(circle 2px at 80% 68%, rgba(100,180,255,0.6) 0%, transparent 100%),
-                radial-gradient(circle 4px at 85% 74%, rgba(255,220,100,0.7) 0%, transparent 100%),
-                radial-gradient(circle 2px at 90% 62%, rgba(255,100,100,0.5) 0%, transparent 100%),
-                radial-gradient(circle 3px at 8%  80%, rgba(255,180,50,0.5) 0%, transparent 100%),
-                radial-gradient(circle 2px at 92% 78%, rgba(100,200,255,0.5) 0%, transparent 100%);
+                radial-gradient(circle 2px at 8% 65%, rgba(255,180,50,0.9) 0%, transparent 100%),
+                radial-gradient(circle 3px at 14% 72%, rgba(255,200,80,0.7) 0%, transparent 100%),
+                radial-gradient(circle 2px at 22% 58%, rgba(100,180,255,0.8) 0%, transparent 100%),
+                radial-gradient(circle 4px at 30% 78%, rgba(255,160,40,0.6) 0%, transparent 100%),
+                radial-gradient(circle 2px at 38% 63%, rgba(200,100,255,0.5) 0%, transparent 100%),
+                radial-gradient(circle 3px at 48% 75%, rgba(255,220,100,0.7) 0%, transparent 100%),
+                radial-gradient(circle 2px at 56% 60%, rgba(100,220,255,0.6) 0%, transparent 100%),
+                radial-gradient(circle 4px at 64% 74%, rgba(255,160,40,0.7) 0%, transparent 100%),
+                radial-gradient(circle 2px at 72% 62%, rgba(200,100,255,0.5) 0%, transparent 100%),
+                radial-gradient(circle 3px at 78% 70%, rgba(255,200,80,0.8) 0%, transparent 100%),
+                radial-gradient(circle 2px at 86% 65%, rgba(100,180,255,0.6) 0%, transparent 100%),
+                radial-gradient(circle 4px at 92% 77%, rgba(255,180,50,0.7) 0%, transparent 100%);
         }
 
-        /* Warm ambient light from ceiling */
-        .bg-scene::after {
-            content: '';
-            position: absolute;
-            top: -20%;
-            left: 30%;
-            width: 40%;
-            height: 60%;
-            background: radial-gradient(ellipse, rgba(255,160,40,0.08) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-
-        /* ── Title Bar ── */
+        /* Title */
         .title-bar {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            margin-bottom: 16px;
+            position: relative; z-index: 10;
+            text-align: center; margin-bottom: 14px;
         }
-
         .title-bar h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            font-weight: 900;
+            font-size: 1.9rem; font-weight: 900;
             background: linear-gradient(135deg, #f9c74f 0%, #f8961e 50%, #f3722c 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none;
-            letter-spacing: 4px;
-            filter: drop-shadow(0 0 20px rgba(249,199,79,0.6));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; letter-spacing: 4px;
+            filter: drop-shadow(0 0 18px rgba(249,199,79,0.55));
+        }
+        .title-bar .sub {
+            font-family: 'Rajdhani', sans-serif; font-size: 0.8rem;
+            letter-spacing: 5px; color: #74b9ff;
+            border: 1px solid rgba(116,185,255,0.35);
+            display: inline-block; padding: 2px 14px; border-radius: 20px;
+            margin-top: 3px; background: rgba(116,185,255,0.05);
         }
 
-        .title-bar .subtitle {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.85rem;
-            letter-spacing: 6px;
-            color: #74b9ff;
-            text-transform: uppercase;
-            border: 1px solid rgba(116,185,255,0.4);
-            display: inline-block;
-            padding: 2px 16px;
-            border-radius: 20px;
-            margin-top: 4px;
-            background: rgba(116,185,255,0.05);
-        }
-
-        /* ── Main Layout ── */
+        /* Layout */
         .game-wrapper {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            gap: 24px;
-            align-items: flex-start;
+            position: relative; z-index: 10;
+            display: flex; gap: 22px; align-items: flex-start;
         }
 
-        /* ── Canvas Container ── */
-        .canvas-shell {
-            position: relative;
-            border-radius: 16px;
-            padding: 6px;
-            background: linear-gradient(135deg, rgba(255,160,40,0.5), rgba(120,60,10,0.3), rgba(255,160,40,0.4));
-            box-shadow:
-                0 0 40px rgba(255,140,30,0.35),
-                0 0 80px rgba(255,140,30,0.15),
-                inset 0 0 20px rgba(255,140,30,0.1);
+        /* Board shell */
+        .board-shell {
+            border-radius: 14px; padding: 5px;
+            background: linear-gradient(135deg, rgba(255,160,40,0.6), rgba(120,60,10,0.4), rgba(255,160,40,0.5));
+            box-shadow: 0 0 40px rgba(255,130,20,0.3), 0 0 80px rgba(255,130,20,0.1);
+        }
+        .board-shell canvas {
+            display: block; border-radius: 10px; cursor: crosshair;
         }
 
-        .canvas-shell canvas {
-            display: block;
-            border-radius: 12px;
-            cursor: crosshair;
-        }
+        /* UI Panel */
+        .ui-panel { width: 225px; display: flex; flex-direction: column; gap: 12px; }
 
-        /* ── Side Panel ── */
-        .ui-panel {
-            width: 230px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .panel-card {
-            background: rgba(10,15,30,0.85);
-            border: 1px solid rgba(255,160,40,0.2);
-            border-radius: 12px;
-            padding: 14px 16px;
+        .card {
+            background: rgba(8,13,30,0.88);
+            border: 1px solid rgba(255,160,40,0.18);
+            border-radius: 11px; padding: 13px 15px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
         }
-
-        .panel-card h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 3px;
-            color: #f9c74f;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            border-bottom: 1px solid rgba(249,199,79,0.2);
-            padding-bottom: 8px;
+        .card h2 {
+            font-family: 'Orbitron', sans-serif; font-size: 0.7rem;
+            letter-spacing: 3px; color: #f9c74f; text-transform: uppercase;
+            margin-bottom: 10px; border-bottom: 1px solid rgba(249,199,79,0.18); padding-bottom: 7px;
         }
-
         .player-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .player-row:last-child { border-bottom: none; }
+        .player-name { font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; font-weight: 600; color: #dfe6e9; }
+        .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 7px; }
+        .dot-w { background: #ecf0f1; box-shadow: 0 0 5px #ecf0f1; }
+        .dot-b { background: #636e72; box-shadow: 0 0 5px #636e72; }
+        .score-val { font-family: 'Orbitron', sans-serif; font-size: 1.25rem; color: #f9c74f; }
 
-        .player-name {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #dfe6e9;
-        }
-
-        .player-dot {
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-        }
-        .dot-white { background: #ecf0f1; box-shadow: 0 0 6px #ecf0f1; }
-        .dot-black { background: #636e72; box-shadow: 0 0 6px #636e72; }
-
-        .player-score-val {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
-            color: #f9c74f;
-        }
-
-        /* Turn indicator */
         .turn-card {
-            text-align: center;
-            padding: 10px 16px;
-            border-radius: 10px;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            border: 1px solid;
-            transition: all 0.3s;
+            text-align: center; padding: 9px 15px; border-radius: 9px;
+            font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; font-weight: 700;
+            letter-spacing: 1px; border: 1px solid; transition: all 0.3s;
+            background: rgba(8,13,30,0.88); backdrop-filter: blur(10px);
         }
-        .turn-p1 {
-            background: rgba(46,204,113,0.1);
-            border-color: rgba(46,204,113,0.5);
-            color: #2ecc71;
-            box-shadow: 0 0 15px rgba(46,204,113,0.2);
-        }
-        .turn-p2 {
-            background: rgba(230,126,34,0.1);
-            border-color: rgba(230,126,34,0.5);
-            color: #e67e22;
-            box-shadow: 0 0 15px rgba(230,126,34,0.2);
-        }
+        .turn-p1 { border-color: rgba(46,204,113,0.5); color: #2ecc71; box-shadow: 0 0 14px rgba(46,204,113,0.18); }
+        .turn-p2 { border-color: rgba(230,126,34,0.5); color: #e67e22; box-shadow: 0 0 14px rgba(230,126,34,0.18); }
 
-        /* Power meter */
-        .power-label {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.8rem;
-            color: #a0a8b0;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-        .power-track {
-            height: 8px;
-            background: rgba(255,255,255,0.07);
-            border-radius: 4px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        #powerBar {
-            height: 100%;
-            width: 0%;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #2ecc71, #f1c40f, #e74c3c);
-            transition: width 0.04s;
-            box-shadow: 0 0 8px currentColor;
-        }
+        .lbl { font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; color: #90a0b0; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+        .power-track { height: 7px; background: rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
+        #powerBar { height: 100%; width: 0%; border-radius: 4px; background: linear-gradient(90deg,#2ecc71,#f1c40f,#e74c3c); transition: width 0.04s; }
 
-        /* Slider */
-        .control-label {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 0.8rem;
-            color: #a0a8b0;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-            display: block;
-        }
         input[type="range"] {
-            width: 100%;
-            -webkit-appearance: none;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            outline: none;
-            cursor: pointer;
+            width: 100%; -webkit-appearance: none; height: 4px;
+            background: rgba(255,255,255,0.1); border-radius: 2px; outline: none; cursor: pointer; margin-top: 2px;
         }
         input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px; height: 16px;
-            border-radius: 50%;
-            background: #f9c74f;
-            box-shadow: 0 0 8px rgba(249,199,79,0.8);
-            cursor: pointer;
+            -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+            background: #f9c74f; box-shadow: 0 0 7px rgba(249,199,79,0.8); cursor: pointer;
         }
-
-        /* Agent Logs */
         .log-box {
-            height: 110px;
-            overflow-y: auto;
-            font-family: monospace;
-            font-size: 0.75rem;
-            color: #55efc4;
-            background: rgba(0,0,0,0.4);
-            padding: 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(85,239,196,0.1);
-            line-height: 1.6;
+            height: 100px; overflow-y: auto; font-family: monospace; font-size: 0.72rem;
+            color: #55efc4; background: rgba(0,0,0,0.35); padding: 7px; border-radius: 6px;
+            border: 1px solid rgba(85,239,196,0.1); line-height: 1.6;
         }
-        .log-box::-webkit-scrollbar { width: 4px; }
-        .log-box::-webkit-scrollbar-track { background: transparent; }
+        .log-box::-webkit-scrollbar { width: 3px; }
         .log-box::-webkit-scrollbar-thumb { background: rgba(85,239,196,0.3); border-radius: 2px; }
-
-        /* Reset button */
-        .btn-reset {
-            width: 100%;
-            padding: 11px;
+        .btn {
+            width: 100%; padding: 10px;
             background: linear-gradient(135deg, #f9c74f, #f8961e);
-            color: #1a0a00;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(249,199,79,0.3);
+            color: #1a0a00; border: none; border-radius: 7px;
+            font-family: 'Orbitron', sans-serif; font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 2px; cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(249,199,79,0.25);
         }
-        .btn-reset:hover {
-            box-shadow: 0 4px 25px rgba(249,199,79,0.6);
-            transform: translateY(-1px);
-        }
-        .btn-reset:active { transform: scale(0.98); }
+        .btn:hover { box-shadow: 0 4px 22px rgba(249,199,79,0.5); transform: translateY(-1px); }
+        .btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
+<div class="bg"></div>
 
-<div class="bg-scene"></div>
-
-<!-- Title -->
 <div class="title-bar">
     <h1>CARROM LEGENDS</h1>
-    <div class="subtitle">Multiplayer Online</div>
+    <div class="sub">Multiplayer Online</div>
 </div>
 
-<!-- Game -->
 <div class="game-wrapper">
-
-    <!-- Board -->
-    <div class="canvas-shell">
-        <canvas id="carromCanvas" width="580" height="580"></canvas>
+    <div class="board-shell">
+        <canvas id="c" width="570" height="570"></canvas>
     </div>
-
-    <!-- UI Panel -->
     <div class="ui-panel">
-
-        <!-- Scores -->
-        <div class="panel-card">
+        <div class="card">
             <h2>Scoreboard</h2>
             <div class="player-row">
-                <span class="player-name"><span class="player-dot dot-white"></span>Player 1</span>
-                <span class="player-score-val" id="score1">0</span>
+                <span class="player-name"><span class="dot dot-w"></span>Player 1</span>
+                <span class="score-val" id="s1">0</span>
             </div>
             <div class="player-row">
-                <span class="player-name"><span class="player-dot dot-black"></span>Player 2</span>
-                <span class="player-score-val" id="score2">0</span>
+                <span class="player-name"><span class="dot dot-b"></span>Player 2</span>
+                <span class="score-val" id="s2">0</span>
             </div>
         </div>
-
-        <!-- Turn -->
-        <div id="turnIndicator" class="turn-card turn-p1">⚡ Player 1's Turn</div>
-
-        <!-- Power -->
-        <div class="panel-card">
-            <div class="power-label">Shot Power</div>
+        <div id="turnCard" class="turn-card turn-p1">⚡ Player 1's Turn</div>
+        <div class="card">
+            <div class="lbl">Shot Power</div>
             <div class="power-track"><div id="powerBar"></div></div>
         </div>
-
-        <!-- Striker placement -->
-        <div class="panel-card">
-            <label class="control-label" for="strikerPos">Striker Position</label>
-            <input type="range" id="strikerPos" min="-1" max="1" step="0.01" value="0">
+        <div class="card">
+            <label class="lbl" for="sldr">Striker Position</label>
+            <input type="range" id="sldr" min="-1" max="1" step="0.01" value="0">
         </div>
-
-        <!-- Logs -->
-        <div class="panel-card">
+        <div class="card">
             <h2>Game Log</h2>
-            <div class="log-box" id="agentLogs">
-                > System ready...<br>
-                > Awaiting moves...<br>
-            </div>
+            <div class="log-box" id="log">> Ready...<br>> Awaiting moves...<br></div>
         </div>
-
-        <button class="btn-reset" id="resetBtn">↺ RESTART GAME</button>
+        <button class="btn" id="resetBtn">↺ RESTART</button>
     </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-//  CARROM LEGENDS — Physics + Visuals Engine
-// ══════════════════════════════════════════════════════════════
-
-const canvas = document.getElementById('carromCanvas');
-const ctx = canvas.getContext('2d');
+// ═══════════════════════════════════════════════════
+//  CARROM LEGENDS — Clean Physics Engine
+// ═══════════════════════════════════════════════════
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
 const W = canvas.width, H = canvas.height;
 
-const score1El   = document.getElementById('score1');
-const score2El   = document.getElementById('score2');
-const turnInd    = document.getElementById('turnIndicator');
-const sliderEl   = document.getElementById('strikerPos');
-const resetBtn   = document.getElementById('resetBtn');
-const logsEl     = document.getElementById('agentLogs');
-const powerBarEl = document.getElementById('powerBar');
+const s1El   = document.getElementById('s1');
+const s2El   = document.getElementById('s2');
+const turnEl = document.getElementById('turnCard');
+const sldr   = document.getElementById('sldr');
+const logEl  = document.getElementById('log');
+const pwrBar = document.getElementById('powerBar');
 
-// ── Constants ──
-const FRICTION     = 0.989;
-const RESTITUTION  = 0.86;
-const BOARD_MARGIN = 38;
-const INNER_SIZE   = W - 2 * BOARD_MARGIN;
-const POCKET_R     = 27;
-const MAX_POWER    = 24;
-const COIN_R       = 13;
-const STRIKER_R    = 17;
+// ── Constants ──────────────────────────────────────
+const BM         = 36;          // board margin
+const IS         = W - 2 * BM; // inner size
+const COIN_R     = 13;
+const STK_R      = 16;
+const PKT_R      = 24;          // pocket radius
+const FRICTION   = 0.988;
+const RESTITUTION = 0.82;
+const MAX_PWR    = 22;
 
-const TYPE = { STRIKER:'striker', WHITE:'white', BLACK:'black', QUEEN:'queen' };
+const TYPE = { S:'striker', W:'white', B:'black', Q:'queen' };
 
-// ── State ──
-let pieces = [], pockets = [];
-let currentPlayer = 1;
-let score = { 1: 0, 2: 0 };
-let striker = null;
-let isAiming = false;
-let aimStart = { x:0, y:0 }, aimCurrent = { x:0, y:0 };
-let piecesMoving = false;
-let turnScore = 0;
-let queenPocketed = false;
-let lastDragSnd = 0;
+// ── State ──────────────────────────────────────────
+let pieces=[], pockets=[];
+let player=1, score={1:0,2:0};
+let striker=null;
+let aiming=false, aimFrom={x:0,y:0}, aimTo={x:0,y:0};
+let moving=false, turnScore=0;
+let particles=[];
+let lastDragSnd=0;
 
-// ── Fireworks Particles ──
-let particles = [];
+// ═══ Audio ═════════════════════════════════════════
+const AC = new (window.AudioContext||window.webkitAudioContext)();
+const go = ()=>{ if(AC.state==='suspended') AC.resume(); };
 
-const CRACKER_COLORS = [
-    '#f9c74f','#f8961e','#f3722c','#e74c3c',
-    '#2ecc71','#00b4d8','#a29bfe','#fd79a8',
-    '#fff','#fdcb6e','#55efc4','#e17055'
-];
+function noise(dur){
+    const b=AC.createBuffer(1,AC.sampleRate*dur,AC.sampleRate);
+    const d=b.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+    return b;
+}
+function playHit(vol){
+    go(); if(vol<0.05) return;
+    vol=Math.min(vol,0.7);
+    // Thump
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type='sine'; o.frequency.setValueAtTime(190,AC.currentTime);
+    o.frequency.exponentialRampToValueAtTime(50,AC.currentTime+0.13);
+    g.gain.setValueAtTime(vol,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.13);
+    o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime+0.13);
+    // Click
+    const s=AC.createBufferSource(); s.buffer=noise(0.02);
+    const g2=AC.createGain(); g2.gain.setValueAtTime(Math.min(vol*1.2,0.8),AC.currentTime);
+    s.connect(g2); g2.connect(AC.destination); s.start();
+}
+function playClack(vol){
+    go(); if(vol<0.05) return;
+    const s=AC.createBufferSource(); s.buffer=noise(0.06);
+    const f=AC.createBiquadFilter(); f.type='bandpass'; f.frequency.value=900+vol*50; f.Q.value=1.5;
+    const g=AC.createGain(); g.gain.setValueAtTime(Math.min(vol*0.5,0.45),AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.06);
+    s.connect(f); f.connect(g); g.connect(AC.destination); s.start();
+}
+function playDrag(pwr){
+    go(); const now=performance.now();
+    if(now-lastDragSnd<80) return; lastDragSnd=now;
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type='sawtooth'; o.frequency.value=280+pwr*9;
+    g.gain.setValueAtTime(0.03,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.06);
+    o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime+0.06);
+}
+function playSnap(pwr){
+    go();
+    const vol=Math.min(pwr/MAX_PWR,1)*0.5;
+    const b=AC.createBuffer(1,AC.sampleRate*0.18,AC.sampleRate);
+    const d=b.getChannelData(0);
+    for(let i=0;i<d.length;i++){
+        const t=i/AC.sampleRate;
+        d[i]=Math.sin(2*Math.PI*(420-t*1600)*t)*Math.pow(1-t/0.18,2)*(Math.random()*0.2+0.8);
+    }
+    const s=AC.createBufferSource(); s.buffer=b;
+    const g=AC.createGain(); g.gain.setValueAtTime(vol,AC.currentTime);
+    s.connect(g); g.connect(AC.destination); s.start();
+}
+function playPocket(){
+    go();
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type='sine'; o.frequency.setValueAtTime(520,AC.currentTime);
+    o.frequency.exponentialRampToValueAtTime(80,AC.currentTime+0.28);
+    g.gain.setValueAtTime(0.4,AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.28);
+    o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime+0.28);
+}
+function playFoul(){
+    go();
+    for(let i=0;i<3;i++){
+        const o=AC.createOscillator(), g=AC.createGain();
+        o.type='square'; o.frequency.value=170;
+        const t0=AC.currentTime+i*0.13;
+        g.gain.setValueAtTime(0.15,t0); g.gain.exponentialRampToValueAtTime(0.001,t0+0.1);
+        o.connect(g); g.connect(AC.destination); o.start(t0); o.stop(t0+0.1);
+    }
+}
 
-function spawnFireworks(x, y, color) {
-    // Multiple burst waves
-    for (let wave = 0; wave < 3; wave++) {
-        const count = wave === 0 ? 22 : 14;
-        for (let i = 0; i < count; i++) {
-            const angle = (i / count) * Math.PI * 2 + wave * 0.4;
-            const speed = (2 + Math.random() * 5) * (1 - wave * 0.2);
-            const col = wave === 0 ? color : CRACKER_COLORS[Math.floor(Math.random() * CRACKER_COLORS.length)];
+// ═══ Fireworks ═════════════════════════════════════
+const FW_COLORS=['#f9c74f','#f8961e','#f3722c','#e74c3c','#2ecc71','#00b4d8','#a29bfe','#fd79a8','#fff','#fdcb6e','#55efc4'];
+
+function spawnFW(x,y,baseColor){
+    for(let w=0;w<3;w++){
+        const n=w===0?20:12;
+        for(let i=0;i<n;i++){
+            const ang=(i/n)*Math.PI*2+w*0.5;
+            const spd=(2.5+Math.random()*5)*(1-w*0.2);
             particles.push({
-                x, y,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                life: 1.0,
-                decay: 0.018 + Math.random() * 0.018,
-                size: 3 + Math.random() * 3,
-                color: col,
-                trail: [],
-                delay: wave * 6  // frames delay for each wave
+                x,y,
+                vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd,
+                life:1, decay:0.016+Math.random()*0.02,
+                size:2.5+Math.random()*3,
+                color: w===0 ? baseColor : FW_COLORS[Math.floor(Math.random()*FW_COLORS.length)],
+                delay:w*7, trail:[]
             });
         }
     }
-    // Sparkle stars
-    for (let i = 0; i < 10; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 1 + Math.random() * 3;
+    for(let i=0;i<8;i++){
+        const ang=Math.random()*Math.PI*2, spd=1+Math.random()*3;
         particles.push({
-            x, y,
-            vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed - 1,
-            life: 1.0,
-            decay: 0.012 + Math.random() * 0.01,
-            size: 1.5 + Math.random() * 2,
-            color: '#fff',
-            isStar: true,
-            trail: [],
-            delay: Math.floor(Math.random() * 10)
+            x,y, vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd-0.8,
+            life:1, decay:0.012+Math.random()*0.01,
+            size:1.5+Math.random()*2, color:'#fff',
+            isStar:true, delay:Math.floor(Math.random()*8), trail:[]
         });
     }
 }
 
-function updateAndDrawParticles() {
-    const alive = [];
-    for (const p of particles) {
-        if (p.delay > 0) { p.delay--; alive.push(p); continue; }
-        p.trail.push({ x: p.x, y: p.y, life: p.life });
-        if (p.trail.length > 5) p.trail.shift();
-
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.12;  // gravity
-        p.vx *= 0.96;
-        p.vy *= 0.96;
-        p.life -= p.decay;
-
-        if (p.life <= 0) continue;
+function tickParticles(){
+    const alive=[];
+    for(const p of particles){
+        if(p.delay>0){ p.delay--; alive.push(p); continue; }
+        p.trail.push({x:p.x,y:p.y});
+        if(p.trail.length>5) p.trail.shift();
+        p.x+=p.vx; p.y+=p.vy;
+        p.vy+=0.1; p.vx*=0.96; p.vy*=0.96;
+        p.life-=p.decay;
+        if(p.life<=0) continue;
         alive.push(p);
-
         // Trail
-        for (let t = 0; t < p.trail.length; t++) {
-            const tp = p.trail[t];
-            const ta = (t / p.trail.length) * p.life * 0.4;
+        for(let t=0;t<p.trail.length;t++){
+            const tp=p.trail[t];
             ctx.beginPath();
-            ctx.arc(tp.x, tp.y, p.size * (t / p.trail.length) * 0.5, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.globalAlpha = ta;
-            ctx.fill();
-            ctx.globalAlpha = 1;
+            ctx.arc(tp.x,tp.y,p.size*(t/p.trail.length)*0.4,0,Math.PI*2);
+            ctx.fillStyle=p.color; ctx.globalAlpha=(t/p.trail.length)*p.life*0.3;
+            ctx.fill(); ctx.globalAlpha=1;
         }
-
-        if (p.isStar) {
-            // Draw 4-point star
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate(p.life * 10);
-            ctx.fillStyle = p.color;
-            ctx.globalAlpha = p.life;
+        if(p.isStar){
+            ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.life*8);
+            ctx.fillStyle=p.color; ctx.globalAlpha=p.life;
             ctx.beginPath();
-            for (let s = 0; s < 4; s++) {
-                const a = s * Math.PI / 2;
-                ctx.lineTo(Math.cos(a) * p.size * 2, Math.sin(a) * p.size * 2);
-                ctx.lineTo(Math.cos(a + Math.PI/4) * p.size * 0.5, Math.sin(a + Math.PI/4) * p.size * 0.5);
+            for(let s=0;s<4;s++){
+                const a=s*Math.PI/2;
+                ctx.lineTo(Math.cos(a)*p.size*2,Math.sin(a)*p.size*2);
+                ctx.lineTo(Math.cos(a+Math.PI/4)*p.size*0.5,Math.sin(a+Math.PI/4)*p.size*0.5);
             }
-            ctx.closePath();
-            ctx.fill();
-            ctx.globalAlpha = 1;
-            ctx.restore();
+            ctx.closePath(); ctx.fill(); ctx.globalAlpha=1; ctx.restore();
         } else {
-            // Glowing dot with halo
             ctx.save();
-            ctx.globalAlpha = p.life * 0.35;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.fill();
-            ctx.globalAlpha = p.life;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.fill();
-            ctx.globalAlpha = 1;
-            ctx.restore();
+            ctx.globalAlpha=p.life*0.3;
+            ctx.beginPath(); ctx.arc(p.x,p.y,p.size*2.2,0,Math.PI*2);
+            ctx.fillStyle=p.color; ctx.fill();
+            ctx.globalAlpha=p.life;
+            ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+            ctx.fillStyle=p.color; ctx.fill();
+            ctx.globalAlpha=1; ctx.restore();
         }
     }
-    particles = alive;
+    particles=alive;
 }
 
-// ══ Audio ══════════════════════════════════════════════════════
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const resume = () => { if (audioCtx.state === 'suspended') audioCtx.resume(); };
-
-function noiseBuffer(dur) {
-    const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * dur, audioCtx.sampleRate);
-    const d = buf.getChannelData(0);
-    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    return buf;
-}
-
-function playCollision(intensity) {
-    resume(); if (intensity < 0.2) return;
-    const vol = Math.min(intensity / 14, 0.55);
-    const src = audioCtx.createBufferSource();
-    src.buffer = noiseBuffer(0.07);
-    const filt = audioCtx.createBiquadFilter();
-    filt.type = 'bandpass'; filt.frequency.value = 900 + intensity * 50; filt.Q.value = 1.5;
-    const g = audioCtx.createGain();
-    g.gain.setValueAtTime(vol, audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.07);
-    src.connect(filt); filt.connect(g); g.connect(audioCtx.destination);
-    src.start();
-}
-
-function playStrikerHit(intensity) {
-    resume(); if (intensity < 0.4) return;
-    const vol = Math.min(intensity / 10, 0.65);
-    const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(55, audioCtx.currentTime + 0.15);
-    g.gain.setValueAtTime(vol, audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-    osc.connect(g); g.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.15);
-
-    const src2 = audioCtx.createBufferSource();
-    src2.buffer = noiseBuffer(0.02);
-    const g2 = audioCtx.createGain();
-    g2.gain.setValueAtTime(Math.min(vol * 1.5, 0.8), audioCtx.currentTime);
-    src2.connect(g2); g2.connect(audioCtx.destination); src2.start();
-}
-
-function playDrag(power) {
-    resume();
-    const now = performance.now();
-    if (now - lastDragSnd < 80) return;
-    lastDragSnd = now;
-    const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.value = 280 + power * 9;
-    g.gain.setValueAtTime(0.035, audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
-    osc.connect(g); g.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.06);
-}
-
-function playRelease(power) {
-    resume();
-    const vol = Math.min(power / MAX_POWER, 1) * 0.5;
-    const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.18, audioCtx.sampleRate);
-    const d = buf.getChannelData(0);
-    for (let i = 0; i < d.length; i++) {
-        const t = i / audioCtx.sampleRate;
-        d[i] = Math.sin(2 * Math.PI * (420 - t * 1600) * t) * Math.pow(1 - t / 0.18, 2) * (Math.random() * 0.2 + 0.8);
-    }
-    const src = audioCtx.createBufferSource();
-    src.buffer = buf;
-    const g = audioCtx.createGain();
-    g.gain.setValueAtTime(vol, audioCtx.currentTime);
-    src.connect(g); g.connect(audioCtx.destination); src.start();
-}
-
-function playPocket() {
-    resume();
-    const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(520, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(75, audioCtx.currentTime + 0.28);
-    g.gain.setValueAtTime(0.4, audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.28);
-    osc.connect(g); g.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.28);
-}
-
-function playFoul() {
-    resume();
-    for (let i = 0; i < 3; i++) {
-        const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
-        osc.type = 'square'; osc.frequency.value = 170;
-        const t0 = audioCtx.currentTime + i * 0.13;
-        g.gain.setValueAtTime(0.15, t0);
-        g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.1);
-        osc.connect(g); g.connect(audioCtx.destination);
-        osc.start(t0); osc.stop(t0 + 0.1);
-    }
-}
-
-// ══ Piece Class ════════════════════════════════════════════════
+// ═══ Piece Class ═══════════════════════════════════
 class Piece {
-    constructor(x, y, radius, type, mass = 1) {
-        this.x = x; this.y = y;
-        this.radius = radius;
-        this.type = type;
-        this.mass = mass;
-        this.vx = 0; this.vy = 0;
-        this.active = true;
-        this.glowPhase = Math.random() * Math.PI * 2; // for animated glow
+    constructor(x,y,r,type,mass=1){
+        this.x=x; this.y=y; this.r=r; this.type=type; this.mass=mass;
+        this.vx=0; this.vy=0; this.active=true;
+        this.sucking=false; this.suckTarget=null;
+        this.gp=Math.random()*Math.PI*2; // glow phase
     }
 
-    draw() {
-        if (!this.active) return;
-        const x = this.x, y = this.y, r = this.radius;
-        this.glowPhase += 0.05;
-
+    draw(){
+        if(!this.active) return;
+        const x=this.x, y=this.y, r=this.r;
+        this.gp+=0.04;
         ctx.save();
 
-        // ── Per-type styling ──
-        if (this.type === TYPE.QUEEN) {
-            // Pulsing red glow underneath
-            const pulse = 0.5 + 0.5 * Math.sin(this.glowPhase);
-            const glowR = r * (1.8 + pulse * 0.5);
-            const glow = ctx.createRadialGradient(x, y, r * 0.5, x, y, glowR);
-            glow.addColorStop(0, `rgba(231,76,60,${0.35 + pulse * 0.25})`);
-            glow.addColorStop(1, 'rgba(231,76,60,0)');
-            ctx.beginPath();
-            ctx.arc(x, y, glowR, 0, Math.PI * 2);
-            ctx.fillStyle = glow;
-            ctx.fill();
+        // ── Queen glow ──
+        if(this.type===TYPE.Q){
+            const pulse=0.5+0.5*Math.sin(this.gp);
+            const gr=ctx.createRadialGradient(x,y,r*0.5,x,y,r*(2+pulse*0.4));
+            gr.addColorStop(0,`rgba(231,76,60,${0.3+pulse*0.25})`);
+            gr.addColorStop(1,'rgba(231,76,60,0)');
+            ctx.beginPath(); ctx.arc(x,y,r*(2+pulse*0.4),0,Math.PI*2);
+            ctx.fillStyle=gr; ctx.fill();
+        }
+        // ── Striker glow ──
+        if(this.type===TYPE.S){
+            const ag=ctx.createRadialGradient(x,y,r*0.3,x,y,r*2.2);
+            ag.addColorStop(0,'rgba(52,152,219,0.2)');
+            ag.addColorStop(1,'rgba(52,152,219,0)');
+            ctx.beginPath(); ctx.arc(x,y,r*2.2,0,Math.PI*2);
+            ctx.fillStyle=ag; ctx.fill();
         }
 
-        if (this.type === TYPE.STRIKER) {
-            // Blue aura
-            const aura = ctx.createRadialGradient(x, y, r * 0.5, x, y, r * 2);
-            aura.addColorStop(0, 'rgba(52,152,219,0.25)');
-            aura.addColorStop(1, 'rgba(52,152,219,0)');
-            ctx.beginPath();
-            ctx.arc(x, y, r * 2, 0, Math.PI * 2);
-            ctx.fillStyle = aura;
-            ctx.fill();
+        // ── Shadow ──
+        ctx.beginPath();
+        ctx.ellipse(x,y+r*0.35,r*0.8,r*0.22,0,0,Math.PI*2);
+        ctx.fillStyle='rgba(0,0,0,0.35)'; ctx.fill();
+
+        // ── Rim (bevel) ──
+        const rim=ctx.createRadialGradient(x-r*0.2,y-r*0.2,r*0.1,x,y,r);
+        if(this.type===TYPE.W){
+            rim.addColorStop(0,'#e8e8e8'); rim.addColorStop(0.65,'#bdc3c7'); rim.addColorStop(1,'#7f8c8d');
+        } else if(this.type===TYPE.B){
+            rim.addColorStop(0,'#636e72'); rim.addColorStop(0.65,'#2d3436'); rim.addColorStop(1,'#111');
+        } else if(this.type===TYPE.Q){
+            rim.addColorStop(0,'#ff7675'); rim.addColorStop(0.6,'#c0392b'); rim.addColorStop(1,'#6e1010');
+        } else {
+            rim.addColorStop(0,'#5dade2'); rim.addColorStop(0.6,'#1a5276'); rim.addColorStop(1,'#0a1f35');
         }
+        ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+        ctx.fillStyle=rim; ctx.fill();
 
-        // ── Shadow beneath coin ──
-        ctx.beginPath();
-        ctx.ellipse(x, y + r * 0.4, r * 0.85, r * 0.25, 0, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0,0,0,0.4)';
-        ctx.fill();
-
-        // ── Coin body (outer bevel/rim) ──
-        const rimGrad = ctx.createRadialGradient(x - r*0.15, y - r*0.15, r*0.3, x, y, r * 1.05);
-
-        if (this.type === TYPE.WHITE) {
-            rimGrad.addColorStop(0, '#e8e8e8');
-            rimGrad.addColorStop(0.7, '#c0c0c0');
-            rimGrad.addColorStop(1, '#888');
-        } else if (this.type === TYPE.BLACK) {
-            rimGrad.addColorStop(0, '#5a5a6e');
-            rimGrad.addColorStop(0.7, '#2c2c3a');
-            rimGrad.addColorStop(1, '#111');
-        } else if (this.type === TYPE.QUEEN) {
-            rimGrad.addColorStop(0, '#ff6b6b');
-            rimGrad.addColorStop(0.6, '#c0392b');
-            rimGrad.addColorStop(1, '#6e1010');
-        } else { // STRIKER
-            rimGrad.addColorStop(0, '#5dade2');
-            rimGrad.addColorStop(0.6, '#1a5276');
-            rimGrad.addColorStop(1, '#0a1f35');
-        }
-
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = rimGrad;
-        ctx.fill();
-
-        // ── Bevel edge ring ──
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.lineWidth = r * 0.18;
-        if (this.type === TYPE.WHITE) ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-        else if (this.type === TYPE.BLACK) ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-        else if (this.type === TYPE.QUEEN) ctx.strokeStyle = 'rgba(255,100,100,0.4)';
-        else ctx.strokeStyle = 'rgba(100,180,255,0.35)';
+        // ── Bevel ring ──
+        ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+        ctx.lineWidth=r*0.16;
+        if(this.type===TYPE.W)      ctx.strokeStyle='rgba(255,255,255,0.35)';
+        else if(this.type===TYPE.B) ctx.strokeStyle='rgba(255,255,255,0.07)';
+        else if(this.type===TYPE.Q) ctx.strokeStyle='rgba(255,120,100,0.4)';
+        else                         ctx.strokeStyle='rgba(120,190,255,0.35)';
         ctx.stroke();
 
         // ── Inner face ──
-        const faceR = r * 0.72;
-        const faceGrad = ctx.createRadialGradient(x - r*0.2, y - r*0.2, r*0.05, x, y, faceR);
-        if (this.type === TYPE.WHITE) {
-            faceGrad.addColorStop(0, '#ffffff');
-            faceGrad.addColorStop(1, '#d5d5d5');
-        } else if (this.type === TYPE.BLACK) {
-            faceGrad.addColorStop(0, '#4a4a5a');
-            faceGrad.addColorStop(1, '#1a1a25');
-        } else if (this.type === TYPE.QUEEN) {
-            faceGrad.addColorStop(0, '#ff5252');
-            faceGrad.addColorStop(1, '#8b0000');
+        const fr=r*0.70;
+        const face=ctx.createRadialGradient(x-r*0.22,y-r*0.22,r*0.04,x,y,fr);
+        if(this.type===TYPE.W){
+            face.addColorStop(0,'#fff'); face.addColorStop(1,'#d0d3d4');
+        } else if(this.type===TYPE.B){
+            face.addColorStop(0,'#4a4e57'); face.addColorStop(1,'#1c1d21');
+        } else if(this.type===TYPE.Q){
+            face.addColorStop(0,'#ff5252'); face.addColorStop(1,'#7d0000');
         } else {
-            faceGrad.addColorStop(0, '#3498db');
-            faceGrad.addColorStop(1, '#0d3a5c');
+            face.addColorStop(0,'#3498db'); face.addColorStop(1,'#0d3a5c');
         }
-        ctx.beginPath();
-        ctx.arc(x, y, faceR, 0, Math.PI * 2);
-        ctx.fillStyle = faceGrad;
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(x,y,fr,0,Math.PI*2); ctx.fillStyle=face; ctx.fill();
 
-        // ── Concentric rings / detail ──
-        if (this.type === TYPE.STRIKER) {
-            // 3 rings
-            for (let ri = 1; ri <= 3; ri++) {
-                ctx.beginPath();
-                ctx.arc(x, y, faceR * (ri / 3.5), 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(150,210,255,${0.4 - ri * 0.08})`;
-                ctx.lineWidth = 1;
-                ctx.stroke();
+        // ── Detail ──
+        if(this.type===TYPE.S){
+            for(let ri=1;ri<=3;ri++){
+                ctx.beginPath(); ctx.arc(x,y,fr*(ri/3.5),0,Math.PI*2);
+                ctx.strokeStyle=`rgba(160,220,255,${0.4-ri*0.08})`; ctx.lineWidth=1; ctx.stroke();
             }
-            // Center dot
-            ctx.beginPath();
-            ctx.arc(x, y, r * 0.12, 0, Math.PI * 2);
-            ctx.fillStyle = '#74b9ff';
-            ctx.fill();
-        } else if (this.type === TYPE.QUEEN) {
-            // Crown symbol (simplified star)
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.fillStyle = 'rgba(255,220,100,0.9)';
-            ctx.font = `bold ${r * 0.7}px serif`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('♛', 0, 0);
-            ctx.restore();
+            ctx.beginPath(); ctx.arc(x,y,r*0.11,0,Math.PI*2);
+            ctx.fillStyle='#74b9ff'; ctx.fill();
+        } else if(this.type===TYPE.Q){
+            ctx.save(); ctx.translate(x,y);
+            ctx.fillStyle='rgba(255,225,100,0.92)';
+            ctx.font=`bold ${r*0.68}px serif`;
+            ctx.textAlign='center'; ctx.textBaseline='middle';
+            ctx.fillText('♛',0,0); ctx.restore();
         } else {
-            // Inner ring
-            ctx.beginPath();
-            ctx.arc(x, y, faceR * 0.5, 0, Math.PI * 2);
-            ctx.strokeStyle = this.type === TYPE.WHITE ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.1)';
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
-            // Center dot
-            ctx.beginPath();
-            ctx.arc(x, y, r * 0.1, 0, Math.PI * 2);
-            ctx.fillStyle = this.type === TYPE.WHITE ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.15)';
-            ctx.fill();
+            ctx.beginPath(); ctx.arc(x,y,fr*0.48,0,Math.PI*2);
+            ctx.strokeStyle=this.type===TYPE.W?'rgba(0,0,0,0.12)':'rgba(255,255,255,0.1)';
+            ctx.lineWidth=1.1; ctx.stroke();
+            ctx.beginPath(); ctx.arc(x,y,r*0.09,0,Math.PI*2);
+            ctx.fillStyle=this.type===TYPE.W?'rgba(0,0,0,0.18)':'rgba(255,255,255,0.13)'; ctx.fill();
         }
 
-        // ── Specular highlight ──
-        const hiGrad = ctx.createRadialGradient(x - r*0.3, y - r*0.3, 0, x - r*0.15, y - r*0.15, r*0.55);
-        hiGrad.addColorStop(0, 'rgba(255,255,255,0.55)');
-        hiGrad.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.beginPath();
-        ctx.ellipse(x - r*0.22, y - r*0.22, r*0.38, r*0.22, -Math.PI/4, 0, Math.PI*2);
-        ctx.fillStyle = hiGrad;
-        ctx.fill();
+        // ── Specular ──
+        const hi=ctx.createRadialGradient(x-r*0.28,y-r*0.28,0,x-r*0.14,y-r*0.14,r*0.5);
+        hi.addColorStop(0,'rgba(255,255,255,0.5)'); hi.addColorStop(1,'rgba(255,255,255,0)');
+        ctx.beginPath(); ctx.ellipse(x-r*0.2,y-r*0.2,r*0.35,r*0.2,-Math.PI/4,0,Math.PI*2);
+        ctx.fillStyle=hi; ctx.fill();
 
         ctx.restore();
     }
 
-    update() {
-        if (!this.active) return;
-
-        // Apply velocity and friction
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vx *= FRICTION;
-        this.vy *= FRICTION;
-        if (Math.abs(this.vx) < 0.04) this.vx = 0;
-        if (Math.abs(this.vy) < 0.04) this.vy = 0;
-
-        const L = BOARD_MARGIN + this.radius, R = W - BOARD_MARGIN - this.radius;
-        const T = BOARD_MARGIN + this.radius, B = H - BOARD_MARGIN - this.radius;
-
-        if (this.x < L) { this.x = L; this.vx = Math.abs(this.vx) * RESTITUTION; playCollision(Math.abs(this.vx) * 2); }
-        else if (this.x > R) { this.x = R; this.vx = -Math.abs(this.vx) * RESTITUTION; playCollision(Math.abs(this.vx) * 2); }
-        if (this.y < T) { this.y = T; this.vy = Math.abs(this.vy) * RESTITUTION; playCollision(Math.abs(this.vy) * 2); }
-        else if (this.y > B) { this.y = B; this.vy = -Math.abs(this.vy) * RESTITUTION; playCollision(Math.abs(this.vy) * 2); }
+    update(){
+        if(!this.active||this.sucking) return;
+        this.x+=this.vx; this.y+=this.vy;
+        this.vx*=FRICTION; this.vy*=FRICTION;
+        if(Math.abs(this.vx)<0.04) this.vx=0;
+        if(Math.abs(this.vy)<0.04) this.vy=0;
+        const L=BM+this.r, R=W-BM-this.r, T=BM+this.r, Bo=H-BM-this.r;
+        if(this.x<L){ this.x=L; this.vx=Math.abs(this.vx)*RESTITUTION; playClack(Math.abs(this.vx)); }
+        else if(this.x>R){ this.x=R; this.vx=-Math.abs(this.vx)*RESTITUTION; playClack(Math.abs(this.vx)); }
+        if(this.y<T){ this.y=T; this.vy=Math.abs(this.vy)*RESTITUTION; playClack(Math.abs(this.vy)); }
+        else if(this.y>Bo){ this.y=Bo; this.vy=-Math.abs(this.vy)*RESTITUTION; playClack(Math.abs(this.vy)); }
     }
 }
 
-// ══ Board Init ═════════════════════════════════════════════════
-function initBoard() {
-    pieces = []; striker = null;
-    queenPocketed = false;
-
-    pockets = [
-        { x: BOARD_MARGIN, y: BOARD_MARGIN },
-        { x: W - BOARD_MARGIN, y: BOARD_MARGIN },
-        { x: BOARD_MARGIN, y: H - BOARD_MARGIN },
-        { x: W - BOARD_MARGIN, y: H - BOARD_MARGIN }
+// ═══ Board Init ════════════════════════════════════
+function initBoard(){
+    pieces=[]; striker=null; particles=[];
+    pockets=[
+        {x:BM,y:BM},{x:W-BM,y:BM},
+        {x:BM,y:H-BM},{x:W-BM,y:H-BM}
     ];
-
-    const cx = W / 2, cy = H / 2;
-
-    // Queen
-    pieces.push(new Piece(cx, cy, COIN_R, TYPE.QUEEN));
-
-    // Inner 6
-    for (let i = 0; i < 6; i++) {
-        const angle = i * Math.PI / 3;
-        const type = i % 2 === 0 ? TYPE.WHITE : TYPE.BLACK;
-        pieces.push(new Piece(cx + Math.cos(angle) * COIN_R * 2.2, cy + Math.sin(angle) * COIN_R * 2.2, COIN_R, type));
+    const cx=W/2, cy=H/2;
+    pieces.push(new Piece(cx,cy,COIN_R,TYPE.Q));
+    for(let i=0;i<6;i++){
+        const a=i*Math.PI/3, t=i%2===0?TYPE.W:TYPE.B;
+        pieces.push(new Piece(cx+Math.cos(a)*COIN_R*2.25,cy+Math.sin(a)*COIN_R*2.25,COIN_R,t));
     }
-
-    // Outer 12
-    for (let i = 0; i < 12; i++) {
-        const angle = (i * Math.PI / 6) + (Math.PI / 12);
-        const type = i % 2 === 0 ? TYPE.BLACK : TYPE.WHITE;
-        pieces.push(new Piece(cx + Math.cos(angle) * COIN_R * 4.4, cy + Math.sin(angle) * COIN_R * 4.4, COIN_R, type));
+    for(let i=0;i<12;i++){
+        const a=(i*Math.PI/6)+(Math.PI/12), t=i%2===0?TYPE.B:TYPE.W;
+        pieces.push(new Piece(cx+Math.cos(a)*COIN_R*4.45,cy+Math.sin(a)*COIN_R*4.45,COIN_R,t));
     }
-
     resetStriker();
 }
 
-function resetStriker() {
-    // Remove old striker safely
-    if (striker !== null) {
-        const idx = pieces.indexOf(striker);
-        if (idx > -1) pieces.splice(idx, 1);
-    }
-    pieces = pieces.filter(p => !(p.type === TYPE.STRIKER && !p.active));
-
-    const baseY = currentPlayer === 1 ? H - 95 : 95;
-    striker = new Piece(W / 2, baseY, STRIKER_R, TYPE.STRIKER, 1.5);
+function resetStriker(){
+    if(striker){ const i=pieces.indexOf(striker); if(i>-1) pieces.splice(i,1); }
+    pieces=pieces.filter(p=>!(p.type===TYPE.S&&!p.active));
+    const baseY=player===1?H-88:88;
+    striker=new Piece(W/2,baseY,STK_R,TYPE.S,1.5);
     pieces.push(striker);
-
-    sliderEl.value = 0;
-    sliderEl.disabled = false;
-    powerBarEl.style.width = '0%';
-    isAiming = false;
-    canvas.style.cursor = 'crosshair';
+    sldr.value=0; sldr.disabled=false;
+    pwrBar.style.width='0%'; aiming=false;
+    canvas.style.cursor='crosshair';
 }
 
-// ══ Slider ═════════════════════════════════════════════════════
-sliderEl.addEventListener('input', e => {
-    if (striker && striker.vx === 0 && striker.vy === 0 && !piecesMoving) {
-        const range = INNER_SIZE / 2 - 50;
-        striker.x = W / 2 + parseFloat(e.target.value) * range;
+// ═══ Slider ════════════════════════════════════════
+sldr.addEventListener('input',e=>{
+    if(striker&&striker.vx===0&&striker.vy===0&&!moving){
+        const range=IS/2-48;
+        striker.x=W/2+parseFloat(e.target.value)*range;
     }
 });
 
-// ══ Mouse ══════════════════════════════════════════════════════
-canvas.addEventListener('mousedown', e => {
-    if (piecesMoving || !striker || !striker.active) return;
-    resume();
-    const r = canvas.getBoundingClientRect();
-    const mx = e.clientX - r.left, my = e.clientY - r.top;
-    if (Math.hypot(mx - striker.x, my - striker.y) < striker.radius + 18) {
-        isAiming = true;
-        aimStart = { x: striker.x, y: striker.y };
-        aimCurrent = { x: mx, y: my };
-        sliderEl.disabled = true;
-        canvas.style.cursor = 'grabbing';
+// ═══ Mouse ═════════════════════════════════════════
+canvas.addEventListener('mousedown',e=>{
+    if(moving||!striker||!striker.active) return;
+    go();
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+    if(Math.hypot(mx-striker.x,my-striker.y)<striker.r+18){
+        aiming=true;
+        aimFrom={x:striker.x,y:striker.y};
+        aimTo={x:mx,y:my};
+        sldr.disabled=true; canvas.style.cursor='grabbing';
     }
 });
-
-canvas.addEventListener('mousemove', e => {
-    if (!isAiming) return;
-    const r = canvas.getBoundingClientRect();
-    aimCurrent = { x: e.clientX - r.left, y: e.clientY - r.top };
-    const power = Math.min(Math.hypot(aimStart.x - aimCurrent.x, aimStart.y - aimCurrent.y) * 0.15, MAX_POWER);
-    powerBarEl.style.width = `${(power / MAX_POWER) * 100}%`;
-    if (power > 1) playDrag(power);
+canvas.addEventListener('mousemove',e=>{
+    if(!aiming) return;
+    const rect=canvas.getBoundingClientRect();
+    aimTo={x:e.clientX-rect.left,y:e.clientY-rect.top};
+    const pwr=Math.min(Math.hypot(aimFrom.x-aimTo.x,aimFrom.y-aimTo.y)*0.15,MAX_PWR);
+    pwrBar.style.width=`${(pwr/MAX_PWR)*100}%`;
+    if(pwr>1) playDrag(pwr);
+});
+canvas.addEventListener('mouseup',()=>{
+    if(!aiming) return;
+    aiming=false; canvas.style.cursor='crosshair';
+    const dx=aimFrom.x-aimTo.x, dy=aimFrom.y-aimTo.y;
+    const pwr=Math.min(Math.hypot(dx,dy)*0.15,MAX_PWR);
+    pwrBar.style.width='0%';
+    if(pwr>1.2){
+        const ang=Math.atan2(dy,dx);
+        playSnap(pwr);
+        striker.vx=Math.cos(ang)*pwr;
+        striker.vy=Math.sin(ang)*pwr;
+        moving=true;
+        addLog(`Player ${player} shoots — ${Math.round((pwr/MAX_PWR)*100)}%`);
+    } else { sldr.disabled=false; }
 });
 
-canvas.addEventListener('mouseup', () => {
-    if (!isAiming) return;
-    isAiming = false;
-    canvas.style.cursor = 'crosshair';
-    const dx = aimStart.x - aimCurrent.x, dy = aimStart.y - aimCurrent.y;
-    const power = Math.min(Math.hypot(dx, dy) * 0.15, MAX_POWER);
-    powerBarEl.style.width = '0%';
-    if (power > 1) {
-        const angle = Math.atan2(dy, dx);
-        playRelease(power);
-        striker.vx = Math.cos(angle) * power;
-        striker.vy = Math.sin(angle) * power;
-        piecesMoving = true;
-        log(`Player ${currentPlayer} shoots — ${Math.round((power / MAX_POWER) * 100)}% power`);
-    } else {
-        sliderEl.disabled = false;
-    }
-});
+// ═══ PHYSICS ═══════════════════════════════════════
+// Clean elastic collision — component decomposition (no sticking!)
+function resolveCollision(a,b){
+    if(!a.active||!b.active||a.sucking||b.sucking) return;
 
-// Touch support
-canvas.addEventListener('touchstart', e => {
-    e.preventDefault();
-    const t = e.touches[0];
-    canvas.dispatchEvent(new MouseEvent('mousedown', { clientX: t.clientX, clientY: t.clientY }));
-}, { passive: false });
-canvas.addEventListener('touchmove', e => {
-    e.preventDefault();
-    const t = e.touches[0];
-    canvas.dispatchEvent(new MouseEvent('mousemove', { clientX: t.clientX, clientY: t.clientY }));
-}, { passive: false });
-canvas.addEventListener('touchend', e => {
-    e.preventDefault();
-    canvas.dispatchEvent(new MouseEvent('mouseup'));
-}, { passive: false });
+    const dx=b.x-a.x, dy=b.y-a.y;
+    const dist=Math.hypot(dx,dy);
+    const minD=a.r+b.r;
+    if(dist>=minD||dist<0.001) return;
 
-// ══ Physics ════════════════════════════════════════════════════
-function resolveCollision(p1, p2) {
-    if (!p1.active || !p2.active || p1.sucking || p2.sucking) return;
-    const dx = p2.x - p1.x, dy = p2.y - p1.y;
-    const dist = Math.hypot(dx, dy);
-    const minDist = p1.radius + p2.radius;
-    if (dist >= minDist || dist === 0) return;
+    // Normal unit vector
+    const nx=dx/dist, ny=dy/dist;
 
-    // Separate overlapping pieces
-    const overlap = minDist - dist;
-    const nx = dx / dist, ny = dy / dist;
-    const totalMass = p1.mass + p2.mass;
-    p1.x -= nx * overlap * (p2.mass / totalMass);
-    p1.y -= ny * overlap * (p2.mass / totalMass);
-    p2.x += nx * overlap * (p1.mass / totalMass);
-    p2.y += ny * overlap * (p1.mass / totalMass);
+    // ── Position correction: push apart with buffer ──
+    const overlap=minD-dist+0.8;      // +0.8px buffer prevents micro re-collisions
+    const tot=a.mass+b.mass;
+    a.x-=nx*overlap*(b.mass/tot);
+    a.y-=ny*overlap*(b.mass/tot);
+    b.x+=nx*overlap*(a.mass/tot);
+    b.y+=ny*overlap*(a.mass/tot);
 
-    // Impulse-based velocity exchange
-    const dvx = p1.vx - p2.vx, dvy = p1.vy - p2.vy;
-    const dot = dvx * nx + dvy * ny;
-    if (dot >= 0) return; // already moving apart
+    // ── Velocity components along normal ──
+    const van=a.vx*nx+a.vy*ny;  // a's normal velocity
+    const vbn=b.vx*nx+b.vy*ny;  // b's normal velocity
 
-    const impulse = (-(1 + RESTITUTION) * dot) / totalMass;
-    p1.vx += impulse * p2.mass * nx;
-    p1.vy += impulse * p2.mass * ny;
-    p2.vx -= impulse * p1.mass * nx;
-    p2.vy -= impulse * p1.mass * ny;
+    // Only resolve if approaching along normal
+    if(van<=vbn) return;
 
-    const intensity = Math.abs(impulse);
-    if (p1.type === TYPE.STRIKER || p2.type === TYPE.STRIKER) playStrikerHit(intensity);
-    else playCollision(intensity);
+    // ── Elastic collision for normal components ──
+    const ma=a.mass, mb=b.mass;
+    const van2=((ma-mb)*van+2*mb*vbn)/(ma+mb);
+    const vbn2=((mb-ma)*vbn+2*ma*van)/(ma+mb);
+
+    // Apply change with restitution
+    const dvan=(van2-van)*RESTITUTION;
+    const dvbn=(vbn2-vbn)*RESTITUTION;
+    a.vx+=dvan*nx; a.vy+=dvan*ny;
+    b.vx+=dvbn*nx; b.vy+=dvbn*ny;
+
+    // Sound
+    const intensity=Math.abs(dvan)+Math.abs(dvbn);
+    if(a.type===TYPE.S||b.type===TYPE.S) playHit(intensity*0.4);
+    else playClack(intensity*0.4);
 }
 
-function checkPockets(piece) {
-    if (!piece.active || piece.sucking) return false;
-    for (let pk of pockets) {
-        const dist = Math.hypot(piece.x - pk.x, piece.y - pk.y);
-        if (dist < POCKET_R) {
-            piece.sucking = true;
-            piece.suckTarget = { x: pk.x, y: pk.y };
-            piece.vx = 0; piece.vy = 0;
-            handlePocketing(piece);
+function checkPocket(p){
+    if(!p.active||p.sucking) return;
+    for(const pk of pockets){
+        if(Math.hypot(p.x-pk.x,p.y-pk.y)<PKT_R){
+            p.sucking=true; p.suckTarget=pk;
+            p.vx=0; p.vy=0;
+            onPocketed(p);
             playPocket();
-            const fwColor = piece.type === TYPE.QUEEN ? '#e74c3c'
-                          : piece.type === TYPE.WHITE ? '#ecf0f1'
-                          : piece.type === TYPE.STRIKER ? '#3498db'
-                          : '#636e72';
-            spawnFireworks(pk.x, pk.y, fwColor);
-            return true;
+            const col=p.type===TYPE.Q?'#e74c3c':p.type===TYPE.W?'#ecf0f1':p.type===TYPE.S?'#74b9ff':'#636e72';
+            spawnFW(pk.x,pk.y,col);
+            return;
         }
     }
-    return false;
 }
 
-function handlePocketing(piece) {
-    if (piece.type === TYPE.STRIKER) {
-        log('⚠ Foul! Striker pocketed.');
-        score[currentPlayer] = Math.max(0, score[currentPlayer] - 5);
-        turnScore -= 5;
-        playFoul();
-    } else if (piece.type === TYPE.WHITE) {
-        score[1] += 10; if (currentPlayer === 1) turnScore += 10;
-        log('⚪ White pocketed! +10 pts');
-    } else if (piece.type === TYPE.BLACK) {
-        score[2] += 5; if (currentPlayer === 2) turnScore += 5;
-        log('⚫ Black pocketed! +5 pts');
-    } else if (piece.type === TYPE.QUEEN) {
-        queenPocketed = true;
-        score[currentPlayer] += 25; turnScore += 25;
-        log('👑 Queen pocketed! +25 pts');
+function onPocketed(p){
+    if(p.type===TYPE.S){
+        addLog('⚠ Foul! Striker in pocket.'); score[player]=Math.max(0,score[player]-5); turnScore-=5; playFoul();
+    } else if(p.type===TYPE.W){
+        score[1]+=10; if(player===1) turnScore+=10; addLog('⚪ White pocketed! +10');
+    } else if(p.type===TYPE.B){
+        score[2]+=5; if(player===2) turnScore+=5; addLog('⚫ Black pocketed! +5');
+    } else if(p.type===TYPE.Q){
+        score[player]+=25; turnScore+=25; addLog('👑 Queen pocketed! +25');
     }
-    updateUI();
+    s1El.innerText=score[1]; s2El.innerText=score[2];
 }
 
-function updateUI() {
-    score1El.innerText = score[1];
-    score2El.innerText = score[2];
+function endTurn(){
+    if(turnScore<=0){
+        player=player===1?2:1;
+    } else { addLog(`Player ${player} retains turn!`); }
+    turnEl.innerText=`⚡ Player ${player}'s Turn`;
+    turnEl.className=`turn-card turn-p${player}`;
+    turnScore=0; resetStriker();
 }
 
-function endTurn() {
-    if (turnScore <= 0) {
-        currentPlayer = currentPlayer === 1 ? 2 : 1;
-    } else {
-        log(`Player ${currentPlayer} retains the turn!`);
-    }
-    turnInd.innerText = `⚡ Player ${currentPlayer}'s Turn`;
-    turnInd.className = `turn-card turn-p${currentPlayer}`;
-    turnScore = 0;
-    resetStriker();
-}
+function addLog(m){ logEl.innerHTML+=`> ${m}<br>`; logEl.scrollTop=logEl.scrollHeight; }
 
-function log(msg) {
-    logsEl.innerHTML += `> ${msg}<br>`;
-    logsEl.scrollTop = logsEl.scrollHeight;
-}
+// ═══ Board Drawing ═════════════════════════════════
+// NEW: Classic cream carrom board look
+function drawBoard(){
+    const cx=W/2, cy=H/2;
 
-// ══ Drawing ════════════════════════════════════════════════════
+    // ── Outer frame: dark mahogany ──
+    const wood=ctx.createLinearGradient(0,0,W,H);
+    wood.addColorStop(0,'#4a1c08');
+    wood.addColorStop(0.35,'#6b2c10');
+    wood.addColorStop(0.65,'#5a2310');
+    wood.addColorStop(1,'#3a1506');
+    ctx.fillStyle=wood; ctx.fillRect(0,0,W,H);
 
-// Pre-compute compass star path
-function drawCompassStar(cx, cy, outerR, innerR, points, color, alpha) {
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    for (let i = 0; i < points * 2; i++) {
-        const r = i % 2 === 0 ? outerR : innerR;
-        const angle = (i * Math.PI / points) - Math.PI / 2;
-        if (i === 0) ctx.moveTo(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r);
-        else ctx.lineTo(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r);
-    }
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-}
-
-function drawBoard() {
-    // ── Outer wood frame ──
-    const woodGrad = ctx.createLinearGradient(0, 0, W, H);
-    woodGrad.addColorStop(0, '#5c2d0a');
-    woodGrad.addColorStop(0.3, '#3d1c07');
-    woodGrad.addColorStop(0.7, '#4a2208');
-    woodGrad.addColorStop(1, '#2a1005');
-    ctx.fillStyle = woodGrad;
-    ctx.fillRect(0, 0, W, H);
-
-    // Wood grain lines
-    ctx.save();
-    ctx.globalAlpha = 0.06;
-    for (let i = 0; i < 30; i++) {
-        const x = (i / 30) * W;
-        ctx.beginPath();
-        ctx.moveTo(x, 0); ctx.lineTo(x + 20, H);
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
+    // Subtle grain
+    ctx.save(); ctx.globalAlpha=0.05;
+    for(let i=0;i<25;i++){
+        const x=(i/25)*W;
+        ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x+15,H);
+        ctx.strokeStyle='#fff'; ctx.lineWidth=0.7; ctx.stroke();
     }
     ctx.restore();
 
-    // ── LED edge glow (amber) ──
-    const edgeGlow = [
-        { x1: BOARD_MARGIN - 2, y1: BOARD_MARGIN - 2, x2: W - BOARD_MARGIN + 2, y2: BOARD_MARGIN - 2 },
-        { x1: BOARD_MARGIN - 2, y1: H - BOARD_MARGIN + 2, x2: W - BOARD_MARGIN + 2, y2: H - BOARD_MARGIN + 2 },
-        { x1: BOARD_MARGIN - 2, y1: BOARD_MARGIN - 2, x2: BOARD_MARGIN - 2, y2: H - BOARD_MARGIN + 2 },
-        { x1: W - BOARD_MARGIN + 2, y1: BOARD_MARGIN - 2, x2: W - BOARD_MARGIN + 2, y2: H - BOARD_MARGIN + 2 },
+    // ── Amber LED edges ──
+    const edges=[
+        [BM-1,BM-1,W-BM+1,BM-1],
+        [BM-1,H-BM+1,W-BM+1,H-BM+1],
+        [BM-1,BM-1,BM-1,H-BM+1],
+        [W-BM+1,BM-1,W-BM+1,H-BM+1]
     ];
-    for (const e of edgeGlow) {
-        const grad = ctx.createLinearGradient(e.x1, e.y1, e.x2, e.y2);
-        grad.addColorStop(0, 'rgba(255,160,30,0)');
-        grad.addColorStop(0.3, 'rgba(255,160,30,0.9)');
-        grad.addColorStop(0.7, 'rgba(255,180,50,0.9)');
-        grad.addColorStop(1, 'rgba(255,160,30,0)');
-        ctx.beginPath();
-        ctx.moveTo(e.x1, e.y1); ctx.lineTo(e.x2, e.y2);
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = 4;
-        ctx.shadowBlur = 14;
-        ctx.shadowColor = 'rgba(255,150,20,0.8)';
-        ctx.stroke();
-        ctx.shadowBlur = 0;
+    for(const [x1,y1,x2,y2] of edges){
+        const g=ctx.createLinearGradient(x1,y1,x2,y2);
+        g.addColorStop(0,'rgba(255,160,30,0)');
+        g.addColorStop(0.25,'rgba(255,165,35,0.95)');
+        g.addColorStop(0.75,'rgba(255,175,45,0.95)');
+        g.addColorStop(1,'rgba(255,160,30,0)');
+        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+        ctx.strokeStyle=g; ctx.lineWidth=4;
+        ctx.shadowBlur=14; ctx.shadowColor='rgba(255,145,15,0.85)';
+        ctx.stroke(); ctx.shadowBlur=0;
     }
 
-    // ── Inner board surface ──
-    const boardGrad = ctx.createRadialGradient(W/2, H/2, 10, W/2, H/2, INNER_SIZE * 0.7);
-    boardGrad.addColorStop(0, '#6b3e1a');
-    boardGrad.addColorStop(0.5, '#4a2810');
-    boardGrad.addColorStop(1, '#2e1808');
-    ctx.fillStyle = boardGrad;
-    ctx.fillRect(BOARD_MARGIN, BOARD_MARGIN, INNER_SIZE, INNER_SIZE);
+    // ── Classic cream playing surface ──
+    const board=ctx.createRadialGradient(cx,cy,0,cx,cy,IS*0.72);
+    board.addColorStop(0,'#f5ead0');
+    board.addColorStop(0.4,'#eeddb5');
+    board.addColorStop(0.8,'#e3cf9e');
+    board.addColorStop(1,'#d4bc85');
+    ctx.fillStyle=board;
+    ctx.fillRect(BM,BM,IS,IS);
 
-    // Subtle ambient light from top
-    const topLight = ctx.createRadialGradient(W/2, BOARD_MARGIN, 0, W/2, H/2, INNER_SIZE * 0.6);
-    topLight.addColorStop(0, 'rgba(255,180,80,0.12)');
-    topLight.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = topLight;
-    ctx.fillRect(BOARD_MARGIN, BOARD_MARGIN, INNER_SIZE, INNER_SIZE);
+    // ── Vignette on playing surface ──
+    const vig=ctx.createRadialGradient(cx,cy,IS*0.3,cx,cy,IS*0.75);
+    vig.addColorStop(0,'rgba(0,0,0,0)');
+    vig.addColorStop(1,'rgba(0,0,0,0.12)');
+    ctx.fillStyle=vig; ctx.fillRect(BM,BM,IS,IS);
 
-    const cx = W / 2, cy = H / 2;
-
-    // ── Board lines ──
+    // ── Board lines (classic red/dark) ──
     ctx.save();
-    ctx.strokeStyle = 'rgba(220,190,130,0.45)';
-    ctx.lineWidth = 1.2;
+    ctx.strokeStyle='rgba(139,0,0,0.55)';
+    ctx.lineWidth=1.5;
 
-    // Outer rectangle
-    ctx.strokeRect(BOARD_MARGIN + 18, BOARD_MARGIN + 18, INNER_SIZE - 36, INNER_SIZE - 36);
+    // Outer inner border
+    const pad=14;
+    ctx.strokeRect(BM+pad,BM+pad,IS-pad*2,IS-pad*2);
 
-    // Diagonal corners
-    const co = BOARD_MARGIN + 18;
-    const ce = W - BOARD_MARGIN - 18;
-    const diagLen = 48;
-    [[co, co, co + diagLen, co], [co, co, co, co + diagLen],
-     [ce, co, ce - diagLen, co], [ce, co, ce, co + diagLen],
-     [co, ce, co + diagLen, ce], [co, ce, co, ce - diagLen],
-     [ce, ce, ce - diagLen, ce], [ce, ce, ce, ce - diagLen]].forEach(([x1,y1,x2,y2]) => {
-        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-    });
+    // Corner pocket circles (classic small circles at corners of inner rect)
+    const co=BM+pad, ce=W-BM-pad;
+    const cRad=18;
+    for(const [cpx,cpy] of [[co,co],[ce,co],[co,ce],[ce,ce]]){
+        ctx.beginPath(); ctx.arc(cpx,cpy,cRad,0,Math.PI*2); ctx.stroke();
+    }
 
     // Baseline lines
-    ctx.setLineDash([4, 4]);
-    ctx.globalAlpha = 0.5;
-    const bOff = 95;
+    const bOff=88;
+    ctx.setLineDash([5,5]); ctx.globalAlpha=0.5;
     ctx.beginPath();
-    ctx.moveTo(BOARD_MARGIN + bOff, BOARD_MARGIN + bOff);
-    ctx.lineTo(W - BOARD_MARGIN - bOff, BOARD_MARGIN + bOff);
-    ctx.moveTo(BOARD_MARGIN + bOff, H - BOARD_MARGIN - bOff);
-    ctx.lineTo(W - BOARD_MARGIN - bOff, H - BOARD_MARGIN - bOff);
-    ctx.moveTo(BOARD_MARGIN + bOff, BOARD_MARGIN + bOff);
-    ctx.lineTo(BOARD_MARGIN + bOff, H - BOARD_MARGIN - bOff);
-    ctx.moveTo(W - BOARD_MARGIN - bOff, BOARD_MARGIN + bOff);
-    ctx.lineTo(W - BOARD_MARGIN - bOff, H - BOARD_MARGIN - bOff);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.moveTo(BM+bOff,BM+bOff); ctx.lineTo(W-BM-bOff,BM+bOff);
+    ctx.moveTo(BM+bOff,H-BM-bOff); ctx.lineTo(W-BM-bOff,H-BM-bOff);
+    ctx.moveTo(BM+bOff,BM+bOff); ctx.lineTo(BM+bOff,H-BM-bOff);
+    ctx.moveTo(W-BM-bOff,BM+bOff); ctx.lineTo(W-BM-bOff,H-BM-bOff);
+    ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=1;
+
+    // Diagonal corner lines (classic carrom board cross)
+    ctx.strokeStyle='rgba(139,0,0,0.4)'; ctx.lineWidth=1;
+    ctx.globalAlpha=0.6;
+    const dOff=50;
+    [[co,co,co+dOff,co],[co,co,co,co+dOff],
+     [ce,co,ce-dOff,co],[ce,co,ce,co+dOff],
+     [co,ce,co+dOff,ce],[co,ce,co,ce-dOff],
+     [ce,ce,ce-dOff,ce],[ce,ce,ce,ce-dOff]].forEach(([x1,y1,x2,y2])=>{
+        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    });
+    ctx.globalAlpha=1;
     ctx.restore();
 
-    // ── Center circle ──
-    ctx.beginPath();
-    ctx.arc(cx, cy, 62, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(220,190,130,0.5)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, 30, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(220,190,130,0.35)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // ── Compass / Star ──
-    // Outer large star
-    drawCompassStar(cx, cy, 58, 14, 8, 'rgba(220,190,130,0.25)', 1);
-    // Inner star
-    drawCompassStar(cx, cy, 28, 10, 8, 'rgba(220,190,130,0.35)', 1);
-    // Cardinal lines
+    // ── Center circle + compass ──
     ctx.save();
-    ctx.strokeStyle = 'rgba(220,190,130,0.4)';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < 4; i++) {
-        const a = (i * Math.PI / 2);
+    ctx.strokeStyle='rgba(139,0,0,0.5)'; ctx.lineWidth=1.8;
+    ctx.beginPath(); ctx.arc(cx,cy,62,0,Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx,cy,26,0,Math.PI*2);
+    ctx.strokeStyle='rgba(139,0,0,0.4)'; ctx.lineWidth=1.2; ctx.stroke();
+
+    // 8-point compass star
+    ctx.fillStyle='rgba(139,0,0,0.18)'; ctx.beginPath();
+    for(let i=0;i<16;i++){
+        const or=i%2===0?58:14, a=(i*Math.PI/8)-Math.PI/2;
+        if(i===0) ctx.moveTo(cx+Math.cos(a)*or,cy+Math.sin(a)*or);
+        else ctx.lineTo(cx+Math.cos(a)*or,cy+Math.sin(a)*or);
+    }
+    ctx.closePath(); ctx.fill();
+
+    // Cardinal spokes
+    ctx.strokeStyle='rgba(139,0,0,0.3)'; ctx.lineWidth=1;
+    for(let i=0;i<4;i++){
+        const a=i*Math.PI/2;
         ctx.beginPath();
-        ctx.moveTo(cx + Math.cos(a) * 30, cy + Math.sin(a) * 30);
-        ctx.lineTo(cx + Math.cos(a) * 62, cy + Math.sin(a) * 62);
-        ctx.stroke();
+        ctx.moveTo(cx+Math.cos(a)*26,cy+Math.sin(a)*26);
+        ctx.lineTo(cx+Math.cos(a)*62,cy+Math.sin(a)*62); ctx.stroke();
     }
     ctx.restore();
 
-    // ── Striker baselines (highlighted) ──
-    if (striker && !piecesMoving) {
-        const baseY = currentPlayer === 1 ? H - 95 : 95;
+    // ── Active baseline highlight ──
+    if(striker&&!moving){
+        const baseY=player===1?H-88:88;
         ctx.save();
         ctx.beginPath();
-        ctx.moveTo(BOARD_MARGIN + bOff, baseY);
-        ctx.lineTo(W - BOARD_MARGIN - bOff, baseY);
-        const clr = currentPlayer === 1 ? 'rgba(46,204,113,0.6)' : 'rgba(230,126,34,0.6)';
-        ctx.strokeStyle = clr;
-        ctx.lineWidth = 2.5;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = clr;
-        ctx.stroke();
+        ctx.moveTo(BM+bOff,baseY); ctx.lineTo(W-BM-bOff,baseY);
+        const bc=player===1?'rgba(46,204,113,0.7)':'rgba(230,126,34,0.7)';
+        ctx.strokeStyle=bc; ctx.lineWidth=2.5;
+        ctx.shadowBlur=10; ctx.shadowColor=bc; ctx.stroke();
         ctx.restore();
     }
 
     // ── Pocket holes ──
-    for (let pk of pockets) {
-        // Outer dark ring
-        const pgOuter = ctx.createRadialGradient(pk.x, pk.y, 0, pk.x, pk.y, POCKET_R + 8);
-        pgOuter.addColorStop(0, 'rgba(0,0,0,0.9)');
-        pgOuter.addColorStop(0.6, 'rgba(0,0,0,0.6)');
-        pgOuter.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.beginPath();
-        ctx.arc(pk.x, pk.y, POCKET_R + 8, 0, Math.PI * 2);
-        ctx.fillStyle = pgOuter;
-        ctx.fill();
-
-        // Hole
-        const pg = ctx.createRadialGradient(pk.x - 4, pk.y - 4, 1, pk.x, pk.y, POCKET_R);
-        pg.addColorStop(0, '#222');
-        pg.addColorStop(1, '#000');
-        ctx.beginPath();
-        ctx.arc(pk.x, pk.y, POCKET_R, 0, Math.PI * 2);
-        ctx.fillStyle = pg;
-        ctx.fill();
-
-        // Rim
-        ctx.beginPath();
-        ctx.arc(pk.x, pk.y, POCKET_R, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(255,160,30,0.5)';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // Corner cross marks
-        const corner = 10;
-        ctx.save();
-        ctx.translate(pk.x, pk.y);
-        ctx.strokeStyle = 'rgba(220,190,130,0.3)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(-corner, 0); ctx.lineTo(corner, 0);
-        ctx.moveTo(0, -corner); ctx.lineTo(0, corner);
-        ctx.stroke();
-        ctx.restore();
+    for(const pk of pockets){
+        // outer glow
+        const og=ctx.createRadialGradient(pk.x,pk.y,0,pk.x,pk.y,PKT_R+10);
+        og.addColorStop(0,'rgba(0,0,0,0.85)');
+        og.addColorStop(0.6,'rgba(0,0,0,0.5)');
+        og.addColorStop(1,'rgba(0,0,0,0)');
+        ctx.beginPath(); ctx.arc(pk.x,pk.y,PKT_R+10,0,Math.PI*2);
+        ctx.fillStyle=og; ctx.fill();
+        // hole
+        const pg=ctx.createRadialGradient(pk.x-3,pk.y-3,1,pk.x,pk.y,PKT_R);
+        pg.addColorStop(0,'#1a1a1a'); pg.addColorStop(1,'#000');
+        ctx.beginPath(); ctx.arc(pk.x,pk.y,PKT_R,0,Math.PI*2);
+        ctx.fillStyle=pg; ctx.fill();
+        // amber rim
+        ctx.beginPath(); ctx.arc(pk.x,pk.y,PKT_R,0,Math.PI*2);
+        ctx.strokeStyle='rgba(255,160,30,0.55)'; ctx.lineWidth=2.2; ctx.stroke();
     }
 }
 
-// ── Aim Slingshot Visual ──
-function drawAimVisual() {
-    if (!isAiming || !striker) return;
-    const dx = aimStart.x - aimCurrent.x, dy = aimStart.y - aimCurrent.y;
-    const dist = Math.hypot(dx, dy);
-    const power = Math.min(dist * 0.15, MAX_POWER);
-    const angle = Math.atan2(dy, dx);
-    const t = power / MAX_POWER;
-    const handleColor = t < 0.4 ? '#2ecc71' : t < 0.75 ? '#f1c40f' : '#e74c3c';
+// ── Aim visual (slingshot) ──
+function drawAim(){
+    if(!aiming||!striker) return;
+    const dx=aimFrom.x-aimTo.x, dy=aimFrom.y-aimTo.y;
+    const pwr=Math.min(Math.hypot(dx,dy)*0.15,MAX_PWR);
+    const ang=Math.atan2(dy,dx);
+    const t=pwr/MAX_PWR;
+    const hc=t<0.4?'#2ecc71':t<0.75?'#f1c40f':'#e74c3c';
 
     // Elastic band
-    ctx.beginPath();
-    ctx.moveTo(aimStart.x, aimStart.y);
-    ctx.lineTo(aimCurrent.x, aimCurrent.y);
-    ctx.strokeStyle = `rgba(116,185,255,${0.4 + t * 0.5})`;
-    ctx.lineWidth = 2.5;
-    ctx.setLineDash([6, 4]);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(aimFrom.x,aimFrom.y); ctx.lineTo(aimTo.x,aimTo.y);
+    ctx.strokeStyle=`rgba(116,185,255,${0.35+t*0.55})`;
+    ctx.lineWidth=2.5; ctx.setLineDash([6,4]); ctx.stroke(); ctx.setLineDash([]);
 
     // Pull handle
-    ctx.beginPath();
-    ctx.arc(aimCurrent.x, aimCurrent.y, 8, 0, Math.PI * 2);
-    ctx.fillStyle = handleColor;
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
+    ctx.beginPath(); ctx.arc(aimTo.x,aimTo.y,8,0,Math.PI*2);
+    ctx.fillStyle=hc; ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.stroke();
 
     // Trajectory dots
-    if (power > 2) {
-        const stepDist = power * 3.2;
-        for (let i = 1; i <= 10; i++) {
-            const px = aimStart.x + Math.cos(angle) * stepDist * i;
-            const py = aimStart.y + Math.sin(angle) * stepDist * i;
-            const opacity = (1 - i / 10) * 0.75;
-            const dr = 4 * (1 - i / 10) + 1;
-            ctx.beginPath();
-            ctx.arc(px, py, dr, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255,255,255,${opacity})`;
-            ctx.fill();
+    if(pwr>2){
+        const sd=pwr*3.2;
+        for(let i=1;i<=10;i++){
+            const px=aimFrom.x+Math.cos(ang)*sd*i, py=aimFrom.y+Math.sin(ang)*sd*i;
+            ctx.beginPath(); ctx.arc(px,py,4*(1-i/10)+1,0,Math.PI*2);
+            ctx.fillStyle=`rgba(255,255,255,${(1-i/10)*0.7})`; ctx.fill();
         }
-
-        // Power label
-        ctx.font = `bold 13px 'Rajdhani', sans-serif`;
-        ctx.fillStyle = handleColor;
-        ctx.textAlign = 'center';
-        ctx.fillText(`${Math.round(t * 100)}%`, aimCurrent.x, aimCurrent.y - 18);
+        ctx.font="bold 12px 'Rajdhani',sans-serif";
+        ctx.fillStyle=hc; ctx.textAlign='center';
+        ctx.fillText(`${Math.round(t*100)}%`,aimTo.x,aimTo.y-17);
     }
-
-    // Glow ring around striker
-    ctx.beginPath();
-    ctx.arc(aimStart.x, aimStart.y, striker.radius + 6 + t * 10, 0, Math.PI * 2);
-    ctx.strokeStyle = `rgba(52,152,219,${0.2 + t * 0.5})`;
-    ctx.lineWidth = 2.5;
-    ctx.stroke();
+    // Striker glow ring
+    ctx.beginPath(); ctx.arc(aimFrom.x,aimFrom.y,striker.r+6+t*10,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(52,152,219,${0.18+t*0.5})`; ctx.lineWidth=2.5; ctx.stroke();
 }
 
-// ══ Game Loop ══════════════════════════════════════════════════
-function gameLoop() {
-    ctx.clearRect(0, 0, W, H);
+// ═══ Game Loop ═════════════════════════════════════
+function loop(){
+    ctx.clearRect(0,0,W,H);
     drawBoard();
 
-    let anyMoving = false;
+    let anyMoving=false;
 
-    // ── Physics pass (2 collision iterations for stability) ──
-    for (let i = 0; i < pieces.length; i++) {
-        const p = pieces[i];
-        if (!p.active || p.sucking) continue;
-        p.update();  // move + wall bounce
-        if (p.vx !== 0 || p.vy !== 0) anyMoving = true;
+    // ── 1. Update positions ──
+    for(const p of pieces){
+        if(!p.active||p.sucking) continue;
+        p.update();
+        if(p.vx!==0||p.vy!==0) anyMoving=true;
     }
-    // First collision pass
-    for (let i = 0; i < pieces.length; i++) {
-        if (!pieces[i].active || pieces[i].sucking) continue;
-        for (let j = i + 1; j < pieces.length; j++) {
-            if (pieces[j].active && !pieces[j].sucking)
-                resolveCollision(pieces[i], pieces[j]);
-        }
-    }
-    // Second collision pass (reduces tunneling at high speed)
-    for (let i = 0; i < pieces.length; i++) {
-        if (!pieces[i].active || pieces[i].sucking) continue;
-        for (let j = i + 1; j < pieces.length; j++) {
-            if (pieces[j].active && !pieces[j].sucking)
-                resolveCollision(pieces[i], pieces[j]);
+
+    // ── 2. Resolve collisions (single clean pass) ──
+    for(let i=0;i<pieces.length;i++){
+        if(!pieces[i].active||pieces[i].sucking) continue;
+        for(let j=i+1;j<pieces.length;j++){
+            if(!pieces[j].active||pieces[j].sucking) continue;
+            resolveCollision(pieces[i],pieces[j]);
         }
     }
 
-    // ── Draw pass + pocket check + suck-in ──
-    for (let i = 0; i < pieces.length; i++) {
-        const p = pieces[i];
-
-        if (p.sucking) {
-            // Smooth suck-in: slide to pocket center, shrink
-            p.x += (p.suckTarget.x - p.x) * 0.22;
-            p.y += (p.suckTarget.y - p.y) * 0.22;
-            p.radius = Math.max(0, p.radius - 1.0);
-            if (p.radius > 0.5) p.draw();
-            else p.active = false;
-            anyMoving = true;
-            continue;
+    // ── 3. Draw + pocket check + suck-in ──
+    for(const p of pieces){
+        if(p.sucking){
+            p.x+=(p.suckTarget.x-p.x)*0.22;
+            p.y+=(p.suckTarget.y-p.y)*0.22;
+            p.r=Math.max(0,p.r-1.1);
+            if(p.r>0.5) p.draw(); else p.active=false;
+            anyMoving=true; continue;
         }
-
-        if (!p.active) continue;
-        checkPockets(p);
+        if(!p.active) continue;
+        checkPocket(p);
         p.draw();
     }
 
-    // ── Fireworks on top ──
-    updateAndDrawParticles();
-    if (particles.length > 0) anyMoving = true;
+    // ── 4. Fireworks ──
+    tickParticles();
+    if(particles.length>0) anyMoving=true;
 
-    drawAimVisual();
+    // ── 5. Aim ──
+    drawAim();
 
-    if (piecesMoving && !anyMoving) {
-        piecesMoving = false;
-        endTurn();
-    }
+    // ── 6. Turn end ──
+    if(moving&&!anyMoving){ moving=false; endTurn(); }
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(loop);
 }
 
-// ══ Reset ══════════════════════════════════════════════════════
-resetBtn.addEventListener('click', () => {
-    score = { 1: 0, 2: 0 };
-    currentPlayer = 1;
-    turnScore = 0;
-    queenPocketed = false;
-    updateUI();
-    turnInd.innerText = `⚡ Player 1's Turn`;
-    turnInd.className = 'turn-card turn-p1';
-    logsEl.innerHTML = `> Game Reset<br>`;
-    initBoard();
+// ═══ Reset ═════════════════════════════════════════
+document.getElementById('resetBtn').addEventListener('click',()=>{
+    score={1:0,2:0}; player=1; turnScore=0;
+    s1El.innerText='0'; s2El.innerText='0';
+    turnEl.innerText="⚡ Player 1's Turn"; turnEl.className='turn-card turn-p1';
+    logEl.innerHTML='> Game Reset<br>'; initBoard();
 });
 
-// ══ Start ══════════════════════════════════════════════════════
 initBoard();
-requestAnimationFrame(gameLoop);
+requestAnimationFrame(loop);
 </script>
 </body>
 </html>
