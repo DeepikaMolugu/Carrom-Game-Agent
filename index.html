@@ -388,14 +388,15 @@ const logsEl     = document.getElementById('agentLogs');
 const powerBarEl = document.getElementById('powerBar');
 
 // ── Constants ──
-const FRICTION     = 0.986;
-const RESTITUTION  = 0.88;
+const FRICTION     = 0.990;  // smoother glide
+const RESTITUTION  = 0.86;
 const BOARD_MARGIN = 38;
 const INNER_SIZE   = W - 2 * BOARD_MARGIN;
-const POCKET_R     = 22;
+const POCKET_R     = 27;     // larger — easier to pocket
 const MAX_POWER    = 24;
 const COIN_R       = 13;
 const STRIKER_R    = 17;
+const SUBSTEPS     = 3;      // sub-step collisions for smoothness
 
 const TYPE = { STRIKER:'striker', WHITE:'white', BLACK:'black', QUEEN:'queen' };
 
@@ -410,6 +411,121 @@ let piecesMoving = false;
 let turnScore = 0;
 let queenPocketed = false;
 let lastDragSnd = 0;
+
+// ── Fireworks Particles ──
+let particles = [];
+
+const CRACKER_COLORS = [
+    '#f9c74f','#f8961e','#f3722c','#e74c3c',
+    '#2ecc71','#00b4d8','#a29bfe','#fd79a8',
+    '#fff','#fdcb6e','#55efc4','#e17055'
+];
+
+function spawnFireworks(x, y, color) {
+    // Multiple burst waves
+    for (let wave = 0; wave < 3; wave++) {
+        const count = wave === 0 ? 22 : 14;
+        for (let i = 0; i < count; i++) {
+            const angle = (i / count) * Math.PI * 2 + wave * 0.4;
+            const speed = (2 + Math.random() * 5) * (1 - wave * 0.2);
+            const col = wave === 0 ? color : CRACKER_COLORS[Math.floor(Math.random() * CRACKER_COLORS.length)];
+            particles.push({
+                x, y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                life: 1.0,
+                decay: 0.018 + Math.random() * 0.018,
+                size: 3 + Math.random() * 3,
+                color: col,
+                trail: [],
+                delay: wave * 6  // frames delay for each wave
+            });
+        }
+    }
+    // Sparkle stars
+    for (let i = 0; i < 10; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1 + Math.random() * 3;
+        particles.push({
+            x, y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 1,
+            life: 1.0,
+            decay: 0.012 + Math.random() * 0.01,
+            size: 1.5 + Math.random() * 2,
+            color: '#fff',
+            isStar: true,
+            trail: [],
+            delay: Math.floor(Math.random() * 10)
+        });
+    }
+}
+
+function updateAndDrawParticles() {
+    const alive = [];
+    for (const p of particles) {
+        if (p.delay > 0) { p.delay--; alive.push(p); continue; }
+        p.trail.push({ x: p.x, y: p.y, life: p.life });
+        if (p.trail.length > 5) p.trail.shift();
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.12;  // gravity
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+        p.life -= p.decay;
+
+        if (p.life <= 0) continue;
+        alive.push(p);
+
+        // Trail
+        for (let t = 0; t < p.trail.length; t++) {
+            const tp = p.trail[t];
+            const ta = (t / p.trail.length) * p.life * 0.4;
+            ctx.beginPath();
+            ctx.arc(tp.x, tp.y, p.size * (t / p.trail.length) * 0.5, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = ta;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+
+        if (p.isStar) {
+            // Draw 4-point star
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.life * 10);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.life;
+            ctx.beginPath();
+            for (let s = 0; s < 4; s++) {
+                const a = s * Math.PI / 2;
+                ctx.lineTo(Math.cos(a) * p.size * 2, Math.sin(a) * p.size * 2);
+                ctx.lineTo(Math.cos(a + Math.PI/4) * p.size * 0.5, Math.sin(a + Math.PI/4) * p.size * 0.5);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            ctx.restore();
+        } else {
+            // Glowing dot with halo
+            ctx.save();
+            ctx.globalAlpha = p.life * 0.35;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+            ctx.globalAlpha = p.life;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            ctx.restore();
+        }
+    }
+    particles = alive;
+}
 
 // ══ Audio ══════════════════════════════════════════════════════
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -670,12 +786,23 @@ class Piece {
 
     update() {
         if (!this.active) return;
+
+        // Smooth suck-in animation when close to a pocket
+        if (this.sucking) {
+            this.x += (this.suckTarget.x - this.x) * 0.18;
+            this.y += (this.suckTarget.y - this.y) * 0.18;
+            this.radius = Math.max(0, this.radius - 0.8);
+            this.vx = 0; this.vy = 0;
+            if (this.radius <= 1) { this.active = false; }
+            return;
+        }
+
         this.x += this.vx;
         this.y += this.vy;
         this.vx *= FRICTION;
         this.vy *= FRICTION;
-        if (Math.abs(this.vx) < 0.05) this.vx = 0;
-        if (Math.abs(this.vy) < 0.05) this.vy = 0;
+        if (Math.abs(this.vx) < 0.04) this.vx = 0;
+        if (Math.abs(this.vy) < 0.04) this.vy = 0;
 
         const L = BOARD_MARGIN + this.radius, R = W - BOARD_MARGIN - this.radius;
         const T = BOARD_MARGIN + this.radius, B = H - BOARD_MARGIN - this.radius;
@@ -809,32 +936,49 @@ canvas.addEventListener('touchend', e => {
 
 // ══ Physics ════════════════════════════════════════════════════
 function resolveCollision(p1, p2) {
+    if (p1.sucking || p2.sucking) return;
     const dx = p2.x - p1.x, dy = p2.y - p1.y;
     const dist = Math.hypot(dx, dy);
-    if (dist < p1.radius + p2.radius && dist > 0) {
-        const overlap = (p1.radius + p2.radius) - dist;
+    const minDist = p1.radius + p2.radius;
+    if (dist < minDist && dist > 0) {
+        const overlap = minDist - dist;
         const nx = dx / dist, ny = dy / dist;
-        p1.x -= nx * overlap / 2; p1.y -= ny * overlap / 2;
-        p2.x += nx * overlap / 2; p2.y += ny * overlap / 2;
+        // Push apart — weighted by mass
+        const totalMass = p1.mass + p2.mass;
+        p1.x -= nx * overlap * (p2.mass / totalMass);
+        p1.y -= ny * overlap * (p2.mass / totalMass);
+        p2.x += nx * overlap * (p1.mass / totalMass);
+        p2.y += ny * overlap * (p1.mass / totalMass);
         const kx = p1.vx - p2.vx, ky = p1.vy - p2.vy;
-        const p = 2 * (nx * kx + ny * ky) / (p1.mass + p2.mass);
-        p1.vx -= p * p2.mass * nx * RESTITUTION;
-        p1.vy -= p * p2.mass * ny * RESTITUTION;
-        p2.vx += p * p1.mass * nx * RESTITUTION;
-        p2.vy += p * p1.mass * ny * RESTITUTION;
-        const intensity = Math.abs(p);
+        const dot = nx * kx + ny * ky;
+        if (dot > 0) return; // already separating
+        const j = -(1 + RESTITUTION) * dot / totalMass;
+        p1.vx += j * p2.mass * nx;
+        p1.vy += j * p2.mass * ny;
+        p2.vx -= j * p1.mass * nx;
+        p2.vy -= j * p1.mass * ny;
+        const intensity = Math.abs(j);
         if (p1.type === TYPE.STRIKER || p2.type === TYPE.STRIKER) playStrikerHit(intensity);
         else playCollision(intensity);
     }
 }
 
 function checkPockets(piece) {
-    if (!piece.active) return false;
+    if (!piece.active || piece.sucking) return false;
     for (let pk of pockets) {
-        if (Math.hypot(piece.x - pk.x, piece.y - pk.y) < POCKET_R) {
-            piece.active = false;
+        const dist = Math.hypot(piece.x - pk.x, piece.y - pk.y);
+        if (dist < POCKET_R + piece.radius * 0.5) {
+            // Begin suck-in animation
+            piece.sucking = true;
+            piece.suckTarget = { x: pk.x, y: pk.y };
             handlePocketing(piece);
             playPocket();
+            // Spawn fireworks at pocket location
+            const fwColor = piece.type === TYPE.QUEEN ? '#e74c3c'
+                          : piece.type === TYPE.WHITE ? '#ecf0f1'
+                          : piece.type === TYPE.STRIKER ? '#3498db'
+                          : '#636e72';
+            spawnFireworks(pk.x, pk.y, fwColor);
             return true;
         }
     }
@@ -1155,18 +1299,73 @@ function gameLoop() {
 
     let anyMoving = false;
 
+    // Sub-stepping: run physics N times per frame for smoother collisions
+    for (let step = 0; step < SUBSTEPS; step++) {
+        for (let i = 0; i < pieces.length; i++) {
+            const p1 = pieces[i];
+            if (!p1.active || p1.sucking) continue;
+            // Only move on first substep to avoid double movement
+            if (step === 0) {
+                p1.vx /= SUBSTEPS;
+                p1.vy /= SUBSTEPS;
+            }
+            p1.x += p1.vx;
+            p1.y += p1.vy;
+            // Wall bounds
+            const L = BOARD_MARGIN + p1.radius, R = W - BOARD_MARGIN - p1.radius;
+            const T = BOARD_MARGIN + p1.radius, B = H - BOARD_MARGIN - p1.radius;
+            if (p1.x < L) { p1.x = L; p1.vx *= -RESTITUTION; if(step===0) playCollision(Math.abs(p1.vx)*3*SUBSTEPS); }
+            else if (p1.x > R) { p1.x = R; p1.vx *= -RESTITUTION; if(step===0) playCollision(Math.abs(p1.vx)*3*SUBSTEPS); }
+            if (p1.y < T) { p1.y = T; p1.vy *= -RESTITUTION; if(step===0) playCollision(Math.abs(p1.vy)*3*SUBSTEPS); }
+            else if (p1.y > B) { p1.y = B; p1.vy *= -RESTITUTION; if(step===0) playCollision(Math.abs(p1.vy)*3*SUBSTEPS); }
+        }
+        // Resolve collisions in this substep
+        for (let i = 0; i < pieces.length; i++) {
+            const p1 = pieces[i];
+            if (!p1.active || p1.sucking) continue;
+            for (let j = i + 1; j < pieces.length; j++) {
+                const p2 = pieces[j];
+                if (p2.active && !p2.sucking) resolveCollision(p1, p2);
+            }
+        }
+        // Restore velocity scale after last substep
+        if (step === SUBSTEPS - 1) {
+            for (const p of pieces) {
+                if (!p.active || p.sucking) continue;
+                // velocity was divided at start, now apply friction once
+                p.vx *= FRICTION;
+                p.vy *= FRICTION;
+                if (Math.abs(p.vx) < 0.04) p.vx = 0;
+                if (Math.abs(p.vy) < 0.04) p.vy = 0;
+            }
+        }
+    }
+
+    // Draw pass + suck-in + pocket check
     for (let i = 0; i < pieces.length; i++) {
         const p1 = pieces[i];
-        if (!p1.active) continue;
-        p1.update();
-        if (Math.abs(p1.vx) > 0 || Math.abs(p1.vy) > 0) anyMoving = true;
-        if (checkPockets(p1)) continue;
-        for (let j = i + 1; j < pieces.length; j++) {
-            const p2 = pieces[j];
-            if (p2.active) resolveCollision(p1, p2);
+
+        // Handle suck-in animation
+        if (p1.sucking) {
+            p1.x += (p1.suckTarget.x - p1.x) * 0.2;
+            p1.y += (p1.suckTarget.y - p1.y) * 0.2;
+            p1.radius = Math.max(0, p1.radius - 0.9);
+            if (p1.radius > 0) p1.draw();
+            else p1.active = false;
+            anyMoving = true;
+            continue;
         }
+
+        if (!p1.active) continue;
+        checkPockets(p1);
+
+        if (Math.abs(p1.vx) > 0 || Math.abs(p1.vy) > 0) anyMoving = true;
         p1.draw();
     }
+
+    // Fireworks on top
+    updateAndDrawParticles();
+    if (particles.length > 0) anyMoving = true;
 
     drawAimVisual();
 
