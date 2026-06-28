@@ -114,3 +114,15 @@ To push this project to a new repository on GitHub, open your terminal and follo
    git branch -M main
    git push -u origin main
    ```
+
+## Assets
+
+### Workflow Architecture Diagram
+![Carrom Agent Architecture Diagram](assets/architecture_diagram.png)
+
+### Cover Banner
+![Carrom Game Cover Banner](assets/cover_page_banner.png)
+
+## Demo Script
+
+If you'd like to present this project, check out the [Demo Script](DEMO_SCRIPT.txt) for a guided walkthrough of the architecture and a live demonstration of the multi-agent workflow.
